@@ -1,0 +1,11 @@
+*.DS_Store
+local.properties
+.metadata/
+*.project
+*.settings/
+bin/
+gen/
+build/
+*.idea
+*.iml
+.gradle
