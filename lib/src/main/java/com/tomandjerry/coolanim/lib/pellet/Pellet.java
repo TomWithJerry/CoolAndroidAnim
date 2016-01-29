@@ -1,4 +1,4 @@
-package com.tomandjerry.coolanim.lib;
+package com.tomandjerry.coolanim.lib.pellet;
 
 import android.graphics.Canvas;
 
@@ -8,10 +8,12 @@ import android.graphics.Canvas;
 public class Pellet {
     private int mCurX;
     private int mCurY;
+    private int mDelayTime;
 
     public Pellet(int x, int y) {
         this.mCurX = x;
         this.mCurY = y;
+        initConfig();
     }
 
     protected void initConfig() {
@@ -20,6 +22,14 @@ public class Pellet {
 
     public void drawSelf(Canvas canvas) {
 
+    }
+
+    public void startAnimation() {
+
+    }
+
+    public void setDelay(int delay) {
+        mDelayTime = delay;
     }
 
     public int getCurX() {

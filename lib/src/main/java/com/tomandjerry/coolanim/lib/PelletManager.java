@@ -1,5 +1,7 @@
 package com.tomandjerry.coolanim.lib;
 
+import com.tomandjerry.coolanim.lib.pellet.Pellet;
+
 import java.util.List;
 
 /**
