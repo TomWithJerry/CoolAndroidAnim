@@ -3,7 +3,7 @@ package com.tomandjerry.coolanim.lib.pellet;
 import android.graphics.Canvas;
 
 /**
- * Created by yanxing on 16/1/29.
+ * Created by weicheng on 16/1/29.
  */
 public class SecondPellet extends Pellet {
 
