@@ -28,6 +28,17 @@ public class Pellet {
 
     }
 
+    public void moveTo(int x, int y) {
+
+    }
+
+    /**
+     * 演变成文字
+     */
+    public void turnToText() {
+
+    }
+
     public void setDelay(int delay) {
         mDelayTime = delay;
     }
