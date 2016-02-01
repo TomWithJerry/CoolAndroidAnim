@@ -12,6 +12,16 @@ public class ForthPellet extends Pellet {
     }
 
     @Override
+    protected void initConfig() {
+
+    }
+
+    @Override
+    public void startAnimation() {
+
+    }
+
+    @Override
     public void drawSelf(Canvas canvas) {
         super.drawSelf(canvas);
     }
