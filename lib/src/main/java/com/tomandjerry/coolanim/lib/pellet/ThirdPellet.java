@@ -23,6 +23,11 @@ public class ThirdPellet extends Pellet {
     }
 
     @Override
+    public void startAnimation() {
+
+    }
+
+    @Override
     public void drawSelf(Canvas canvas) {
         super.drawSelf(canvas);
     }
