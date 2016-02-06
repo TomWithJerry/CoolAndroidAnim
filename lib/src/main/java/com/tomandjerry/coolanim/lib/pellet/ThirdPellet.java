@@ -280,7 +280,7 @@ public class ThirdPellet extends Pellet {
 
     @Override
     public void startAnimation() {
-        super.startAnimation();
+
     }
 
     @Override

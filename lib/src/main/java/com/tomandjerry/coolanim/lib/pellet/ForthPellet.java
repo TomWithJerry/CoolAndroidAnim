@@ -84,6 +84,11 @@ public class ForthPellet extends Pellet {
         mAnimatorSet.start();
     }
 
+    @Override
+    public void startAnimation() {
+
+    }
+
     // 黄色圆环,内部绿色小球由无变大到圆环,仍然在黄色圆弧内
     public ValueAnimator createInsideCircleAnim() {
         ValueAnimator anim = ValueAnimator.ofFloat(0, STANDARD_MIN_R, STANDARD_MIN_R + 10);

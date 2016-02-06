@@ -1,11 +1,18 @@
 package com.tomandjerry.coolanim.lib;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.tomandjerry.coolanim.lib.pellet.FirstPellet;
+import com.tomandjerry.coolanim.lib.pellet.Pellet;
+import com.tomandjerry.coolanim.lib.pellet.SecondPellet;
 
 /**
  * Created by yanxing on 16/1/19.
@@ -15,23 +22,20 @@ public class CoolAnimView extends View {
     public final static int HEIGHT_DEFAULT = 300;
 
     private PelletManager mPelletMng;
+    private ValueAnimator mAnimator;
+
     private boolean isInit = false;
 
     public CoolAnimView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public CoolAnimView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public CoolAnimView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CoolAnimView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override
@@ -58,19 +62,28 @@ public class CoolAnimView extends View {
         }
         return result;
     }
-
     public void init() {
-        if (isInit) {
-            return;
-        }
-        mPelletMng = new PelletManager(this);
-        isInit = true;
+        mPelletMng = new PelletManager();
+        mPelletMng.initPellets();
+
+        mAnimator = ValueAnimator.ofInt(0, 1).setDuration(16);
+        mAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                invalidate();
+            }
+        });
+        mAnimator.start();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        init();
+        if(!isInit){
+            init();
+            isInit = true;
+        }
         mPelletMng.drawTheWorld(canvas);
     }
 }

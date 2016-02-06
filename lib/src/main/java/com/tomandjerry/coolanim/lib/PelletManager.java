@@ -9,42 +9,38 @@ import android.view.View;
 import com.tomandjerry.coolanim.lib.pellet.ForthPellet;
 import com.tomandjerry.coolanim.lib.pellet.Pellet;
 import com.tomandjerry.coolanim.lib.pellet.ThirdPellet;
+import com.tomandjerry.coolanim.lib.pellet.FirstPellet;
+import com.tomandjerry.coolanim.lib.pellet.SecondPellet;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by yanxing on 16/1/19.
+ * Created by WeiCheng on 16/1/19.
  */
 public class PelletManager {
-    public List<Pellet> pellets;
-    private View mView;
 
-    public PelletManager(View view) {
-        mView = view;
-        pellets = new ArrayList<>();
-        pellets.add(new ThirdPellet(view.getWidth() / 2, view.getHeight() / 2));
-        pellets.add(new ForthPellet(view.getWidth() / 2 + 100, view.getHeight() / 2));
-        startTimer();
+    public List<Pellet> pelletList;
+
+    public PelletManager() {
+        pelletList = new ArrayList<>();
     }
 
-    public void startTimer() {
-        ValueAnimator timer = ValueAnimator.ofInt(0, 1);
-        timer.setDuration(16);
-        timer.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                mView.invalidate();
-            }
-        });
-        timer.setRepeatMode(ValueAnimator.RESTART);
-        timer.setRepeatCount(ValueAnimator.INFINITE);
-        timer.start();
+    public void initPellets(){
+        this.setPellet(new FirstPellet(200, 300));
+        this.setPellet(new SecondPellet(300, 300));
+    }
+
+    public void setPellet(Pellet pellet){
+        if(pellet != null){
+            pelletList.add(pellet);
+            pellet.prepareAnim();
+        }
     }
 
     public void drawTheWorld(Canvas canvas) {
-        for (Pellet pellet : pellets) {
-            pellet.drawSelf(canvas);
+        for (Pellet p :pelletList){
+            p.drawSelf(canvas);
         }
     }
 }
