@@ -60,13 +60,17 @@ public class CoolAnimView extends View {
     }
 
     public void init() {
-        mPelletMng = new PelletManager();
+        if (isInit) {
+            return;
+        }
+        mPelletMng = new PelletManager(this);
+        isInit = true;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         init();
-        mPelletMng.drawTheWorld();
+        mPelletMng.drawTheWorld(canvas);
     }
 }
