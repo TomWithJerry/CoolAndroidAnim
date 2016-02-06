@@ -6,8 +6,10 @@ import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.view.View;
 
-import com.tomandjerry.coolanim.lib.pellet.FirstPellet;
+import com.tomandjerry.coolanim.lib.pellet.ForthPellet;
 import com.tomandjerry.coolanim.lib.pellet.Pellet;
+import com.tomandjerry.coolanim.lib.pellet.ThirdPellet;
+import com.tomandjerry.coolanim.lib.pellet.FirstPellet;
 import com.tomandjerry.coolanim.lib.pellet.SecondPellet;
 
 import java.util.ArrayList;
