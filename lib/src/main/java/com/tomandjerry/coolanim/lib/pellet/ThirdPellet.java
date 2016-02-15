@@ -87,11 +87,9 @@ public class ThirdPellet extends Pellet {
         // 等待黄色圆传递
         ValueAnimator waitForAnim = ValueAnimator.ofFloat(0, 100);
         waitForAnim.setDuration(1000);
-
         // 黄色圆缩小,绿色弧线出现,旋转从0->-120,从-120->-240,抛出黄色小球,绿色弧线逐渐变成球,
         // 红色弧线绕圈,逐渐合并为圆环,
         ValueAnimator smallerAndRotateAnim = createSmallerAndRotateAnim();
-
         // 红色弧线往内缩,绿色圆放大,回到膨胀效果
         ValueAnimator backAnim = createBackAnim();
 
