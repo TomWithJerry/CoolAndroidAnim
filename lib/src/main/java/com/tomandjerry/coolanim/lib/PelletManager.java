@@ -29,6 +29,8 @@ public class PelletManager {
     public void initPellets(){
         this.setPellet(new FirstPellet(200, 300));
         this.setPellet(new SecondPellet(300, 300));
+        this.setPellet(new ThirdPellet(200, 500));
+        this.setPellet(new ForthPellet(300, 500));
     }
 
     public void setPellet(Pellet pellet){
