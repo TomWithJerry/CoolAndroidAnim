@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.tomandjerry.coolanim.lib.pellet.ForthPellet;
 import com.tomandjerry.coolanim.lib.pellet.Pellet;
+import com.tomandjerry.coolanim.lib.pellet.SmallYellowBall;
 import com.tomandjerry.coolanim.lib.pellet.ThirdPellet;
 import com.tomandjerry.coolanim.lib.pellet.FirstPellet;
 import com.tomandjerry.coolanim.lib.pellet.SecondPellet;
@@ -21,6 +22,7 @@ import java.util.List;
 public class PelletManager {
 
     public List<Pellet> pelletList;
+    private SmallYellowBall mBall;
 
     public PelletManager() {
         pelletList = new ArrayList<>();
@@ -31,6 +33,7 @@ public class PelletManager {
         this.setPellet(new SecondPellet(300, 300));
         this.setPellet(new ThirdPellet(200, 500));
         this.setPellet(new ForthPellet(300, 500));
+        mBall = SmallYellowBall.getInstance();
     }
 
     public void setPellet(Pellet pellet){
@@ -44,5 +47,7 @@ public class PelletManager {
         for (Pellet p :pelletList){
             p.drawSelf(canvas);
         }
+        // 绘制小球
+        mBall.drawSelf(canvas);
     }
 }

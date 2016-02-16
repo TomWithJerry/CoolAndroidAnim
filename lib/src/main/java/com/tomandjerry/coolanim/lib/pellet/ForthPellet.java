@@ -50,11 +50,12 @@ public class ForthPellet extends Pellet {
     //
     private RadialGradient mRadialGradient;
     // 时间值
-    private int mDuration1 = 2000;
-    private int mDuration2 = 6000;
-    private int mDuration3 = 1000;
+    private int mDuration1 = 1500;
+    private int mDuration2 = 3000;
+    private int mDuration3 = 2000;
     private int mDuration4 = 1000;
-    private int mDuration5 = 6000;
+    private int mDuration5 = 3500;
+    private int mDuration6 = 1000;
 
 
     public ForthPellet(int x, int y) {
@@ -73,14 +74,21 @@ public class ForthPellet extends Pellet {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
         mAnimatorSet = new AnimatorSet();
-
+        // 黄色圆环,内部绿色小球由无变大到圆环,仍然在黄色圆弧内
         ValueAnimator anim1 = createInsideCircleAnim();
+        // 黄色圆环旋转为圆弧,带有一点蓝色的尾巴,逐渐缩短,绿色圆膨胀一些,变为圆环
         ValueAnimator anim2 = createRotateAnim();
+        // 等待小球的到来,黄色圆弧彻底消失,绿色圆弧变为实心圆
         ValueAnimator anim3 = createWaitAndFillAnim();
+        // 填充,等待一会,缩小然后放大
         ValueAnimator anim4 = createSmallBiggerAnim();
+        // 圆环颜色由内向外拓展为蓝色.颜色由浅逐渐变深,一半的时候,内拓为红色,再到黄色,最后全黄,回到第一步
         ValueAnimator anim5 = createColorfulAnim();
 
-        mAnimatorSet.playSequentially(anim1, anim2, anim3, anim4, anim5);
+        ValueAnimator anim6 = createPassAnim();
+
+        mAnimatorSet.playSequentially(anim1, anim2, anim3, anim4, anim5, anim6
+        );
         mAnimatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -143,7 +151,9 @@ public class ForthPellet extends Pellet {
      * 第二步:黄色圆环旋转为圆弧,带有一点蓝色的尾巴,逐渐缩短,绿色圆膨胀一些,变为圆环
      */
     protected ValueAnimator createRotateAnim() {
+        // 内部绿色圆膨胀10
         final int gap = 10;
+        // 膨胀速率与角度关系
         final float rate = gap / 180f;
         final int[] colors = new int[]{TRANSPARENT, TRANSPARENT, BLUE};
         final float[] positions = new float[]{0, 0.8f, 1};
@@ -191,7 +201,7 @@ public class ForthPellet extends Pellet {
         return animator;
     }
 
-    // 第三步:黄色圆弧彻底消失,绿色圆弧变为实心圆
+    // 第三步:等待小球的到来,黄色圆弧彻底消失,绿色圆弧变为实心圆
     protected ValueAnimator createWaitAndFillAnim() {
         ValueAnimator animator = ValueAnimator.ofInt(0, 10);
         animator.setDuration(mDuration3);
@@ -245,7 +255,6 @@ public class ForthPellet extends Pellet {
                     mSeStrokeWidth -= mDifValue / 2f;
                 } else {
                     mSeCurR += mDifValue / 2f;
-//                    mSeStrokeWidth -= mDifValue;
                 }
                 mPreValue = mCurValue;
             }
@@ -331,6 +340,51 @@ public class ForthPellet extends Pellet {
                                  isStart = false;
                              }
                          });
+        return animator;
+    }
+
+    /**
+     * 过度动画,使弧线宽度回到初始值
+     * @return
+     */
+    protected ValueAnimator createPassAnim() {
+        final float[] gap = new float[]{0, 0};
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1000);
+        animator.setDuration(mDuration6);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (!isStart) {
+                    return;
+                }
+                mState = 1;
+                mCurValue = (float) animation.getAnimatedValue();
+                mDifValue = mCurValue - mPreValue;
+                mFiCurR += mDifValue * gap[0];
+                mFiStrokeWidth += mDifValue * gap[1];
+                mPreValue = mCurValue;
+            }
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+                 @Override
+                 public void onAnimationStart(Animator animation) {
+                     mState = 3;
+                     isStart = true;
+                     mCurValue = 0;
+                     mPreValue = 0;
+                     mFiCurR = mSeCurR;
+                     mFiStrokeWidth = mSeStrokeWidth;
+                     gap[0] = (50 - mFiCurR) / 1000;
+                     gap[1] = (33 - mFiStrokeWidth) / 1000;
+                     mSeCurR = 0;
+                     mSeStrokeWidth = 0;
+                 }
+
+                 @Override
+                 public void onAnimationEnd(Animator animation) {
+                     isStart = false;
+                 }
+             });
         return animator;
     }
 
