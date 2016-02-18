@@ -10,19 +10,13 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.Log;
 
+import com.tomandjerry.coolanim.lib.Config;
+
 /**
  * 用animationset完成
- * 两种颜色交替,黄色和绿色,红色
- * 1.从黄色小圆点->大圆点,有一个膨胀回弹的感觉
- * 2.从中心向外射出8条黄线,然后消失,圆点空心.
- * 3.颜色从内往外渐变,内空心圆放大到一定程度,往回填充变为实心圆
- * 4.
  * Created by yanxing on 16/1/29.
  */
 public class ThirdPellet extends Pellet {
-    private int GREEN = Color.parseColor("#339966");
-    private int YELLOW = Color.parseColor("#FFCC00");
-    private int RED = Color.RED;
     private Paint mPaint;
     // 第一个圆或圆环或圆弧的半径和画笔大小
     private float mFiCurR;
@@ -32,8 +26,6 @@ public class ThirdPellet extends Pellet {
     private float mSeStrokeWidth;
     // 正常圆(能停留的)最大的直径
     private float STANDARD_MAX_R;
-    // 正常圆(能停留的)最小的直径
-    private float STANDARD_MAX_STROKE;
     // 正常圆(能停留的)最大的stroke
     private float STANDARD_MIN_R;
     // 前一个值
@@ -58,9 +50,13 @@ public class ThirdPellet extends Pellet {
     private int mRedAngle;
     // 用于绘制红色弧线的开口角度
     private int mGapRedAngle;
-
     // 黄色小球,用于弹出
     private SmallYellowBall mBall;
+    // 时间值
+    private int mDuration1 = 1500;
+    private int mDuration2 = 3000;
+    private int mDuration3 = 5000;
+    private int mDuration4 = 1500;
 
     public ThirdPellet(int x, int y) {
         super(x, y);
@@ -68,7 +64,6 @@ public class ThirdPellet extends Pellet {
 
     @Override
     protected void initConfig() {
-        mAnimatorSet = new AnimatorSet();
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
 
@@ -80,13 +75,19 @@ public class ThirdPellet extends Pellet {
         mSeStrokeWidth = 15;
         STANDARD_MAX_R = 50;
         STANDARD_MIN_R = 15;
+
+    }
+
+    @Override
+    protected void initAnim() {
+        mAnimatorSet = new AnimatorSet();
         // 放大弹出射线
 
         // 绿色圆弧包围红色圆,内部先产生间隔,红色圆膨胀,然后绿色圆弧和红色圆膨胀效果
         ValueAnimator flattenAnim = createFlattenAnim();
         // 等待黄色圆传递
         ValueAnimator waitForAnim = ValueAnimator.ofFloat(0, 100);
-        waitForAnim.setDuration(1000);
+        waitForAnim.setDuration(mDuration2);
         // 黄色圆缩小,绿色弧线出现,旋转从0->-120,从-120->-240,抛出黄色小球,绿色弧线逐渐变成球,
         // 红色弧线绕圈,逐渐合并为圆环,
         ValueAnimator smallerAndRotateAnim = createSmallerAndRotateAnim();
@@ -94,13 +95,13 @@ public class ThirdPellet extends Pellet {
         ValueAnimator backAnim = createBackAnim();
 
         mAnimatorSet.playSequentially(flattenAnim, waitForAnim, smallerAndRotateAnim, backAnim);
-        mAnimatorSet.start();
         mAnimatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mAnimatorSet.start();
             }
         });
+        mAnimatorSet.start();
     }
 
     /**
@@ -110,7 +111,7 @@ public class ThirdPellet extends Pellet {
     protected ValueAnimator createBackAnim() {
         final float rate = (STANDARD_MAX_R - 45) / 30F;
         ValueAnimator backAnim = ValueAnimator.ofFloat(45, STANDARD_MIN_R);
-        backAnim.setDuration(1500);
+        backAnim.setDuration(mDuration4);
         backAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -160,7 +161,7 @@ public class ThirdPellet extends Pellet {
         // 第四个参数,内外圆同时扩大,最后同大小的范围
         float fov = thv + bothFlattenValue;
         ValueAnimator flattenAnim = ValueAnimator.ofFloat(fiv, sev, thv, fov);
-        flattenAnim.setDuration(1500);
+        flattenAnim.setDuration(mDuration1);
         flattenAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -221,7 +222,7 @@ public class ThirdPellet extends Pellet {
 
         // 0->300->420->720
         ValueAnimator smallerAnim = ValueAnimator.ofFloat(0, 720);
-        smallerAnim.setDuration(5000);
+        smallerAnim.setDuration(mDuration3);
         smallerAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -286,7 +287,7 @@ public class ThirdPellet extends Pellet {
         switch (mState) {
             case 1:
                 mPaint.setStrokeWidth(mFiStrokeWidth);
-                mPaint.setColor(GREEN);
+                mPaint.setColor(Config.GREEN);
                 canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
 
                 mPaint.setStrokeWidth(mSeStrokeWidth);
@@ -294,21 +295,21 @@ public class ThirdPellet extends Pellet {
                 canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
                 break;
             case 2:
-                mPaint.setColor(GREEN);
+                mPaint.setColor(Config.GREEN);
                 mPaint.setStrokeWidth(mFiStrokeWidth);
                 canvas.drawArc(mOval, mAngle, GAP_ANGLE, false, mPaint);
 
                 mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(YELLOW);
+                mPaint.setColor(Config.YELLOW);
                 canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
                 break;
             case 3:
                 // 绘制红色弧线
                 mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(RED);
+                mPaint.setColor(Config.RED);
                 canvas.drawArc(mRedOval, mRedAngle, mGapRedAngle, false, mPaint);
 
-                mPaint.setColor(GREEN);
+                mPaint.setColor(Config.GREEN);
                 mPaint.setStrokeWidth(mFiStrokeWidth);
                 canvas.drawArc(mOval, mAngle, mGapGreenAngle, false, mPaint);
 
@@ -316,12 +317,12 @@ public class ThirdPellet extends Pellet {
             case 4:
                 // 绘制红色圆弧
                 mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(GREEN);
+                mPaint.setColor(Config.GREEN);
                 canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
 
                 // 绘制绿色圆
                 mPaint.setStrokeWidth(mFiStrokeWidth);
-                mPaint.setColor(RED);
+                mPaint.setColor(Config.RED);
                 canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
 
                 break;
@@ -329,6 +330,6 @@ public class ThirdPellet extends Pellet {
                 break;
         }
         // 绘制小球
-        mBall.drawSelf(canvas);
+//        mBall.drawSelf(canvas);
     }
 }

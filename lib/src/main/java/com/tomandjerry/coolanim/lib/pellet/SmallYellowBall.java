@@ -7,12 +7,13 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.Log;
 
+import com.tomandjerry.coolanim.lib.Config;
+
 /**
  * 小球运动过程中是椭圆的
  * Created by yanxing on 16/1/31.
  */
 public class SmallYellowBall {
-    private int YELLOW = Color.parseColor("#FFCC00");
     private static SmallYellowBall mBall;
     private boolean isShow = false;
     private Paint mPaint;
@@ -52,7 +53,7 @@ public class SmallYellowBall {
 
     protected void initConfig() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(YELLOW);
+        mPaint.setColor(Config.YELLOW);
         mRadius = 15;
         mDistance = 100;
         mDuration = 2000;
