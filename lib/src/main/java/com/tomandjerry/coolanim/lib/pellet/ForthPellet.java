@@ -13,15 +13,12 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
 
+import com.tomandjerry.coolanim.lib.Config;
+
 /**
  * Created by yanxing on 16/1/29.
  */
 public class ForthPellet extends Pellet {
-    private int GREEN = Color.parseColor("#5eb752");
-    private int YELLOW = Color.parseColor("#fde443");
-    private int BLUE = Color.parseColor("#21bbfc");
-    private int RED = Color.RED;
-    private int TRANSPARENT = Color.parseColor("#0021bbfc");
     // 第一个圆或圆环或圆弧的半径和画笔大小
     private float mFiCurR;
     private float mFiStrokeWidth;
@@ -73,6 +70,10 @@ public class ForthPellet extends Pellet {
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
+    }
+
+    @Override
+    protected void initAnim() {
         mAnimatorSet = new AnimatorSet();
         // 黄色圆环,内部绿色小球由无变大到圆环,仍然在黄色圆弧内
         ValueAnimator anim1 = createInsideCircleAnim();
@@ -155,7 +156,7 @@ public class ForthPellet extends Pellet {
         final int gap = 10;
         // 膨胀速率与角度关系
         final float rate = gap / 180f;
-        final int[] colors = new int[]{TRANSPARENT, TRANSPARENT, BLUE};
+        final int[] colors = new int[]{Config.TRANSPARENT, Config.TRANSPARENT, Config.BLUE};
         final float[] positions = new float[]{0, 0.8f, 1};
 
         mAngle = 0;
@@ -193,7 +194,7 @@ public class ForthPellet extends Pellet {
                         getCurY() - (STANDARD_MAX_R - 5 - mFiStrokeWidth / 2),
                         getCurX() + (STANDARD_MAX_R - 5 - mFiStrokeWidth / 2),
                         getCurY() + (STANDARD_MAX_R - 5 - mFiStrokeWidth / 2));
-                colors[2] = BLUE;
+                colors[2] = Config.BLUE;
                 positions[1] = 0.8f;
                 mSweepGradient = new SweepGradient(getCurX(), getCurY(), colors, positions);
             }
@@ -281,8 +282,8 @@ public class ForthPellet extends Pellet {
     protected ValueAnimator createColorfulAnim() {
         final float[] positions1 = new float[]{0f, 0f};
         final float[] positions2 = new float[]{0f, 0f, 0f, 0f, 0f, 0f};
-        final int[] colors1 = new int[]{YELLOW, GREEN};
-        final int[] colors2 = new int[]{YELLOW, YELLOW, RED, RED, BLUE, BLUE};
+        final int[] colors1 = new int[]{Config.YELLOW, Config.GREEN};
+        final int[] colors2 = new int[]{Config.YELLOW, Config.YELLOW, Config.RED, Config.RED, Config.BLUE, Config.BLUE};
         ValueAnimator animator = ValueAnimator.ofInt(0, 100, 200, 300, 400);
         animator.setDuration(mDuration5);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -298,8 +299,8 @@ public class ForthPellet extends Pellet {
                     positions1[1] = positions1[0];
                     mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth / 2, colors1, positions1, Shader.TileMode.CLAMP);
                 } else if (mCurValue <= 200) {
-                    colors1[0] = BLUE;
-                    colors1[1] = YELLOW;
+                    colors1[0] = Config.BLUE;
+                    colors1[1] = Config.YELLOW;
                     positions1[0] = (mCurValue - 100) / 100f;
                     positions1[1] = positions1[0];
                     mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth / 2, colors1, positions1, Shader.TileMode.CLAMP);
@@ -330,8 +331,8 @@ public class ForthPellet extends Pellet {
                                  positions2[2] = 0f;
                                  positions2[1] = 0f;
                                  positions2[0] = 0f;
-                                 colors1[0] = YELLOW;
-                                 colors1[1] = GREEN;
+                                 colors1[0] = Config.YELLOW;
+                                 colors1[1] = Config.GREEN;
                                  mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth, colors1, positions1, Shader.TileMode.CLAMP);
                              }
 
@@ -394,11 +395,11 @@ public class ForthPellet extends Pellet {
             case 1:
                 // 绘制黄色圆环或圆
                 mPaint.setStrokeWidth(mFiStrokeWidth);
-                mPaint.setColor(YELLOW);
+                mPaint.setColor(Config.YELLOW);
                 canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
                 // 绘制绿色圆环
                 mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(GREEN);
+                mPaint.setColor(Config.GREEN);
                 canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
                 break;
             case 2:
@@ -413,12 +414,12 @@ public class ForthPellet extends Pellet {
                 // 绘制黄色弧线
                 mPaint.setShader(null);
                 mPaint.setStrokeWidth(mFiStrokeWidth);
-                mPaint.setColor(YELLOW);
+                mPaint.setColor(Config.YELLOW);
                 canvas.drawArc(mRectF, mAngle - 90, mSweepAngle, false, mPaint);
 
                 // 绘制绿色圆环
                 mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(GREEN);
+                mPaint.setColor(Config.GREEN);
                 canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
                 break;
             case 3:
