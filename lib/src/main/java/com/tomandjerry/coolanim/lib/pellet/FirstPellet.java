@@ -22,7 +22,7 @@ public class FirstPellet extends Pellet {
     //环绕行星最大半径
     private final int SECOND_CIRCLE_MAX_RADIUS = 10;
     private final int THIRD_CIRCLE_MIN_STROKEWIDTH = 15;//黄色圆的线粗最小值
-    private final int DIVIDE_DEGREES = 20;
+    private final int DIVIDE_DEGREES = 35;
 
     private Paint mPaint;
     private RectF mRectF;
@@ -63,7 +63,7 @@ public class FirstPellet extends Pellet {
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setAntiAlias(true);
-        mRectF = new RectF(140, 240, 260, 360);
+        mRectF = new RectF(getCurX() - 45, getCurY() - 45, getCurX() + 45, getCurY() + 45);
 
     }
 
@@ -224,34 +224,36 @@ public class FirstPellet extends Pellet {
         //蓝色球
         mPaint.setColor(Color.BLUE);
         mPaint.setStrokeWidth(mFirCirRadius);
-        canvas.drawCircle(200, 300, mFirCirRadius / 2, mPaint);
+        canvas.drawCircle(200, getCurY(), mFirCirRadius / 2, mPaint);
 
         //环绕行星
+        //TODO 关系
         mPaint.setColor(Color.GREEN);
         for (int i = 0; i < 9; i++) {
             canvas.save();
             mPaint.setStrokeWidth(mSecCirRadius);
-            canvas.rotate(90 + i * DIVIDE_DEGREES + mAroundCirDegrees, 200, 300);
-            canvas.drawCircle(200, 200, mSecCirRadius / 2, mPaint);
+            canvas.rotate(90 + i * DIVIDE_DEGREES + mAroundCirDegrees, getCurX(), getCurY());
+            canvas.drawCircle(getCurX(), getCurY() - 60, mSecCirRadius / 2, mPaint);
             canvas.restore();
         }
 
         //环绕结束,黄色球包围
         mPaint.setColor(Color.YELLOW);
         mPaint.setStrokeWidth(mThiCirStrokeWidth);
-        canvas.drawCircle(200, 300, mThiCirRadius / 2, mPaint);
+        canvas.drawCircle(getCurX(), getCurY(), mThiCirRadius / 2, mPaint);
 
 
         //扇形弧线
-        mPaint.setColor(Color.parseColor("#ff5777"));
+        //TODO 需要修改实现
+        mPaint.setColor(Color.BLUE);
         canvas.save();
-        canvas.rotate(mAroundArcDegrees, 200, 300);
-        mPaint.setStrokeWidth(10);
+        canvas.rotate(mAroundArcDegrees, getCurX(), getCurY());
+        mPaint.setStrokeWidth(20);
         canvas.drawArc(mRectF, 0, mAroundArcLength, false, mPaint);
         canvas.restore();
 
         mPaint.setColor(Color.BLUE);
         mPaint.setStrokeWidth(mPreFirCirRadius);
-        canvas.drawCircle(200, 300, mPreFirCirRadius / 2, mPaint);
+        canvas.drawCircle(getCurX(), getCurY(), mPreFirCirRadius / 2, mPaint);
     }
 }
