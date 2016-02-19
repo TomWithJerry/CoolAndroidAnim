@@ -49,6 +49,8 @@ public class ThirdPellet extends Pellet {
     private int mGapRedAngle;
     // 黄色小球,用于弹出
     private SmallYellowBall mBall;
+    //
+    private boolean isStart = false;
     // 时间值
     private int mDuration1 = 1500;
     private int mDuration2 = 3000;
@@ -111,6 +113,9 @@ public class ThirdPellet extends Pellet {
         backAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+                if (!isStart) {
+                    return;
+                }
                 mState = 4;
                 mCurValue = (float) animation.getAnimatedValue();
                 mDifValue = mPreValue - mCurValue;
@@ -127,9 +132,15 @@ public class ThirdPellet extends Pellet {
         backAnim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
+                isStart = true;
                 mState = 4;
                 mPreValue = 45;
                 mCurValue = 45;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isStart = false;
             }
         });
         return backAnim;
@@ -190,6 +201,12 @@ public class ThirdPellet extends Pellet {
                 mSeStrokeWidth = 15;
                 // 小球不显示
                 mBall.setShow(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mSeCurR = MAX_RADIUS_CIRCLE;
+                mFiCurR = MAX_RADIUS_CIRCLE;
             }
         });
         return flattenAnim;
@@ -266,6 +283,7 @@ public class ThirdPellet extends Pellet {
             public void onAnimationEnd(Animator animation) {
                 mState = 4;
                 mFiStrokeWidth = 15;
+                mFiCurR = MAX_RADIUS_CIRCLE;
                 mSeStrokeWidth = 30;
                 mSeCurR = 16f;
             }
@@ -311,12 +329,12 @@ public class ThirdPellet extends Pellet {
 
                 break;
             case 4:
-                // 绘制红色圆弧
+                // 绘制绿色圆
                 mPaint.setStrokeWidth(mSeStrokeWidth);
                 mPaint.setColor(Config.GREEN);
                 canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
 
-                // 绘制绿色圆
+                // 绘制红色圆弧
                 mPaint.setStrokeWidth(mFiStrokeWidth);
                 mPaint.setColor(Config.RED);
                 canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);

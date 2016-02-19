@@ -274,9 +274,9 @@ public class ForthPellet extends Pellet {
      * 第五步:圆环颜色由内向外拓展为蓝色.颜色由浅逐渐变深,一半的时候,内拓为红色,再到黄色,最后全黄,回到第一步
      */
     protected ValueAnimator createColorfulAnim() {
-        final float[] positions1 = new float[]{0f, 0f};
+        final float[] positions1 = new float[]{0f, 0f, 0f, 0f};
         final float[] positions2 = new float[]{0f, 0f, 0f, 0f, 0f, 0f};
-        final int[] colors1 = new int[]{Config.YELLOW, Config.GREEN};
+        final int[] colors1 = new int[]{Config.YELLOW, Config.YELLOW, Config.GREEN, Config.GREEN};
         final int[] colors2 = new int[]{Config.YELLOW, Config.YELLOW, Config.RED, Config.RED, Config.BLUE, Config.BLUE};
         ValueAnimator animator = ValueAnimator.ofInt(0, 100, 200, 300, 400);
         animator.setDuration(mDuration5);
@@ -289,22 +289,28 @@ public class ForthPellet extends Pellet {
                 mState = 3;
                 mCurValue = (int) animation.getAnimatedValue();
                 if (mCurValue <= 100) {
-                    positions1[0] = mCurValue / 100f;
-                    positions1[1] = positions1[0];
+                    positions1[0] = 0;
+                    positions1[1] = mCurValue / 100f;
+                    positions1[2] = positions1[0];
+                    positions1[3] = 1;
                     mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth / 2, colors1, positions1, Shader.TileMode.CLAMP);
                 } else if (mCurValue <= 200) {
                     colors1[0] = Config.BLUE;
-                    colors1[1] = Config.YELLOW;
-                    positions1[0] = (mCurValue - 100) / 100f;
-                    positions1[1] = positions1[0];
+                    colors1[1] = Config.BLUE;
+                    colors1[2] = Config.YELLOW;
+                    colors1[3] = Config.YELLOW;
+                    positions1[0] = 0;
+                    positions1[1] = (mCurValue - 100) / 100f;
+                    positions1[2] = positions1[0];
+                    positions1[3] = 1;
                     mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth / 2, colors1, positions1, Shader.TileMode.CLAMP);
                 } else {
-                    positions2[5] = (mCurValue - 200) / 100f;
-                    positions2[4] = positions2[5] - 0.2f;
+                    positions2[5] = 1;
+                    positions2[4] = (mCurValue - 200) / 100f;
                     positions2[3] = positions2[4];
-                    positions2[2] = positions2[3] - 0.4f;
+                    positions2[2] = positions2[3] - 0.2f;
                     positions2[1] = positions2[2];
-                    positions2[0] = positions2[1] - 0.6f;
+                    positions2[0] = 0;
                     mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth / 2, colors2, positions2, Shader.TileMode.CLAMP);
                 }
             }
@@ -326,7 +332,9 @@ public class ForthPellet extends Pellet {
                                  positions2[1] = 0f;
                                  positions2[0] = 0f;
                                  colors1[0] = Config.YELLOW;
-                                 colors1[1] = Config.GREEN;
+                                 colors1[1] = Config.YELLOW;
+                                 colors1[2] = Config.GREEN;
+                                 colors1[3] = Config.GREEN;
                                  mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth, colors1, positions1, Shader.TileMode.CLAMP);
                              }
 
