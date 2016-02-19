@@ -12,6 +12,8 @@ import android.graphics.RectF;
 import android.os.Build;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import com.tomandjerry.coolanim.lib.Config;
+
 /**
  * Created by weicheng on 16/1/31.
  */
@@ -44,7 +46,6 @@ public class FirstPellet extends Pellet {
     //最后的蓝圆，对应最开始的蓝圆
     private int mPreFirCirRadius;
 
-    private AnimatorSet animatorSet;
     private ValueAnimator firAnimator;
     private ValueAnimator firAnimator2;
     private ValueAnimator secAnimator;
@@ -228,7 +229,7 @@ public class FirstPellet extends Pellet {
 
         //环绕行星
         //TODO 关系
-        mPaint.setColor(Color.GREEN);
+        mPaint.setColor(Config.GREEN);
         for (int i = 0; i < 9; i++) {
             canvas.save();
             mPaint.setStrokeWidth(mSecCirRadius);
@@ -238,7 +239,7 @@ public class FirstPellet extends Pellet {
         }
 
         //环绕结束,黄色球包围
-        mPaint.setColor(Color.YELLOW);
+        mPaint.setColor(Config.YELLOW);
         mPaint.setStrokeWidth(mThiCirStrokeWidth);
         canvas.drawCircle(getCurX(), getCurY(), mThiCirRadius / 2, mPaint);
 
@@ -252,7 +253,7 @@ public class FirstPellet extends Pellet {
         canvas.drawArc(mRectF, 0, mAroundArcLength, false, mPaint);
         canvas.restore();
 
-        mPaint.setColor(Color.BLUE);
+        mPaint.setColor(Config.BLUE);
         mPaint.setStrokeWidth(mPreFirCirRadius);
         canvas.drawCircle(getCurX(), getCurY(), mPreFirCirRadius / 2, mPaint);
     }

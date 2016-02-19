@@ -4,9 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+
+import com.tomandjerry.coolanim.lib.Config;
 
 /**
  * Created by weicheng on 16/1/31.
@@ -14,7 +15,7 @@ import android.graphics.Path;
 public class SecondPellet extends Pellet {
 
     //移动长度
-    private final int MOVE_MAX_LINTH = 200;
+    private final int MOVE_MAX_LINTH = 100;
     //环绕线粗，应为AROUND_POINT_RADIUS*2;
     private final int LINE_STROKE_LENGTH = 8;
     //环绕行星(圆)半径
@@ -107,16 +108,20 @@ public class SecondPellet extends Pellet {
                 if (factor < 1) {
                     mLineRightOffset = (int) (MOVE_MAX_LINTH * factor);
                 } else {
-                    mIsCirLineShow = false;//线变短变成圆一会消失，交给第三个小球处理
+                    //线变短变成圆一会消失，交给第三个小球处理
+                    mIsCirLineShow = false;
                     mAroundLineDegrees = (int) (90 * (2 - factor));
                     if (factor < 1.5) {
                         mAroundLineInsideP = MAX_RADIUS_CIRCLE - (int) (MAX_RADIUS_CIRCLE * (1.5f - factor) * 2);
-                        if (mRedCirCleRadius > 20) {//红球缩小至20时就停止缩小
+                        //红球缩小至20时就停止缩小
+                        if (mRedCirCleRadius > 20) {
                             mRedCirStrokeFactor = (int) (50 * (1.5 - factor) * 2);
                             mRedCirCleRadius = MAX_RADIUS_CIRCLE - mAroundLineInsideP;
                         }
+                        //中心小黄球出现
                         mFirYellowCirRadius = (int) (10 * (factor - 1) * 2);
                     }
+                    //底层黄球出现（环）
                     if (factor > 1.5) {
                         mIsAroundPointV = true;
                         mAroundPointY = (int) ((MAX_RADIUS_CIRCLE / 2) * (factor - 1.5f) * 2);
@@ -132,7 +137,7 @@ public class SecondPellet extends Pellet {
             }
         });
 
-        //黄球放大，再缩小，缩小过程伴随着环绕行星点变线向内伸长。
+        //黄球（环）放大，再缩小，缩小过程伴随着环绕行星点变线向内伸长。
         thirdAnimator = ValueAnimator.ofFloat(0, 5).setDuration(3000);
         thirdAnimator.setRepeatCount(0);
         thirdAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -161,10 +166,10 @@ public class SecondPellet extends Pellet {
                 } else if (factor < 4.0f) {
                     //停顿一下
                 } else if (factor < 5.0f) {
+                    //红球（环）内边外扩，内部黄球放大
                     mFirYellowCirRadius = (int) (20 * (factor - 4.0f));
                     mRedCirStrokeFactor = (int) (30 - 16 * (factor - 4.0f));
                     mRedCirCleRadius = (int) (35 + 8 * (factor - 4.0));
-                } else {
                 }
             }
         });
@@ -188,15 +193,15 @@ public class SecondPellet extends Pellet {
         if (mPaint.getStyle() != Paint.Style.STROKE) {
             mPaint.setStyle(Paint.Style.STROKE);
         }
-        mPaint.setColor(Color.YELLOW);
+        mPaint.setColor(Config.YELLOW);
         mPaint.setStrokeWidth(mSecYellowCirRadius);
         canvas.drawCircle(getCurX(), getCurY(), mSecYellowCirRadius / 2, mPaint);
 
-        mPaint.setColor(Color.RED);
+        mPaint.setColor(Config.RED);
         mPaint.setStrokeWidth(mRedCirStrokeFactor);
         canvas.drawCircle(getCurX(), getCurY(), mRedCirCleRadius - mRedCirStrokeFactor / 2, mPaint);
 
-        mPaint.setColor(Color.YELLOW);
+        mPaint.setColor(Config.YELLOW);
         mPaint.setStrokeWidth(mFirYellowCirRadius);
         canvas.drawCircle(getCurX(), getCurY(), mFirYellowCirRadius / 2, mPaint);
 
@@ -216,7 +221,7 @@ public class SecondPellet extends Pellet {
     }
 
     private void drawAroundLine(Canvas canvas) {
-        mPaint.setColor(Color.RED);
+        mPaint.setColor(Config.RED);
         mPaint.setStrokeWidth(LINE_STROKE_LENGTH);
         for (int i = 0; i < 8; i++) {
             canvas.save();
