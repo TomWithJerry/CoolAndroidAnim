@@ -5,8 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
@@ -25,8 +23,6 @@ public class ForthPellet extends Pellet {
     // 第二个圆或圆环或圆弧的半径和画笔大小
     private float mSeCurR;
     private float mSeStrokeWidth;
-    // 正常圆(能停留的)最大的直径
-    private int STANDARD_MAX_R;
     // 正常圆(能停留的)最小的直径
     private int STANDARD_MIN_R;
     // 前一个值
@@ -61,9 +57,8 @@ public class ForthPellet extends Pellet {
 
     @Override
     protected void initConfig() {
-        STANDARD_MAX_R = 50;
         STANDARD_MIN_R = 15;
-        mFiCurR = STANDARD_MAX_R;
+        mFiCurR = MAX_RADIUS_CIRCLE;
         mFiStrokeWidth = 33;
         mSeCurR = 0;
         mSeStrokeWidth = mSeCurR;
@@ -94,9 +89,8 @@ public class ForthPellet extends Pellet {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mAnimatorSet.start();
-                STANDARD_MAX_R = 50;
                 STANDARD_MIN_R = 15;
-                mFiCurR = STANDARD_MAX_R;
+                mFiCurR = MAX_RADIUS_CIRCLE;
                 mFiStrokeWidth = 33;
                 mSeCurR = 0;
                 mSeStrokeWidth = mSeCurR;
@@ -190,10 +184,10 @@ public class ForthPellet extends Pellet {
                 mCurValue = 0;
                 mPreValue = 0;
                 mSweepAngle = 360;
-                mRectF = new RectF(getCurX() - (STANDARD_MAX_R - 5 - mFiStrokeWidth / 2),
-                        getCurY() - (STANDARD_MAX_R - 5 - mFiStrokeWidth / 2),
-                        getCurX() + (STANDARD_MAX_R - 5 - mFiStrokeWidth / 2),
-                        getCurY() + (STANDARD_MAX_R - 5 - mFiStrokeWidth / 2));
+                mRectF = new RectF(getCurX() - (MAX_RADIUS_CIRCLE - 5 - mFiStrokeWidth / 2),
+                        getCurY() - (MAX_RADIUS_CIRCLE - 5 - mFiStrokeWidth / 2),
+                        getCurX() + (MAX_RADIUS_CIRCLE - 5 - mFiStrokeWidth / 2),
+                        getCurY() + (MAX_RADIUS_CIRCLE - 5 - mFiStrokeWidth / 2));
                 colors[2] = Config.BLUE;
                 positions[1] = 0.8f;
                 mSweepGradient = new SweepGradient(getCurX(), getCurY(), colors, positions);
@@ -240,7 +234,7 @@ public class ForthPellet extends Pellet {
     // 第四步:填充,等待一会,缩小然后放大
     protected ValueAnimator createSmallBiggerAnim() {
 
-        ValueAnimator animator = ValueAnimator.ofInt(0, STANDARD_MIN_R + STANDARD_MAX_R);
+        ValueAnimator animator = ValueAnimator.ofInt(0, STANDARD_MIN_R + MAX_RADIUS_CIRCLE);
         animator.setDuration(mDuration4);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -375,7 +369,7 @@ public class ForthPellet extends Pellet {
                      mPreValue = 0;
                      mFiCurR = mSeCurR;
                      mFiStrokeWidth = mSeStrokeWidth;
-                     gap[0] = (50 - mFiCurR) / 1000;
+                     gap[0] = (MAX_RADIUS_CIRCLE - mFiCurR) / 1000;
                      gap[1] = (33 - mFiStrokeWidth) / 1000;
                      mSeCurR = 0;
                      mSeStrokeWidth = 0;
