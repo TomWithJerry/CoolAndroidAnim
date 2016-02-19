@@ -9,9 +9,9 @@ import android.graphics.RectF;
 import com.tomandjerry.coolanim.lib.Config;
 
 /**
- * Created by Weiwu on 16/2/19.
+ * Created by Weiwu on 16/2/20.
  */
-public class ALetter extends Letter {
+public class DLetter extends Letter {
 
     private Paint mPaint;
 
@@ -21,7 +21,8 @@ public class ALetter extends Letter {
     //变化角度
     private int mSweepAngle = 0;
     //字母边长
-    private int mLength = 120;
+    private int mRadius = 120;
+    private int mLineLength = 180;
     //线粗
     private int mStrokeWidth = 20;
     private ValueAnimator mAnimator;
@@ -29,7 +30,7 @@ public class ALetter extends Letter {
     private Point mFirPoint;
     private Point mSecPoint;
 
-    public ALetter(int x, int y) {
+    public DLetter(int x, int y) {
         super(x, y);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(Config.WHITE);
@@ -37,9 +38,9 @@ public class ALetter extends Letter {
         mPaint.setStyle(Paint.Style.STROKE);
 
         //除去线粗带来的偏差
-        int offsetSub = mLength / 2 - mStrokeWidth / 2;
+        int offsetSub = mRadius / 2 - mStrokeWidth / 2;
         //对其圆右边内边位置
-        mFirPoint = new Point(mCurX + offsetSub, mCurY + mLength / 2);
+        mFirPoint = new Point(mCurX + offsetSub, mCurY + mRadius / 2);
         mSecPoint = new Point(mFirPoint);
         //圆向内偏移
         mRectF = new RectF(mCurX - offsetSub, mCurY - offsetSub, mCurX + offsetSub, mCurY + offsetSub);
@@ -54,10 +55,10 @@ public class ALetter extends Letter {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float factor = (float) animation.getAnimatedValue();
                 //竖线
-                mSecPoint.y = (int) (mFirPoint.y - mLength * factor);
-                if (factor > 0.5f) {
-                    //中点处开始画圆
-                    float zoroToOne = (factor - 0.5f) * 2;
+                mSecPoint.y = (int) (mFirPoint.y - mLineLength * factor);
+                if (factor > 0.333f) {
+                    //2/3处开始画圆
+                    float zoroToOne = (factor - 0.333f) * 3 / 2;
                     mSweepAngle = -(int) (360 * zoroToOne);
                 }
             }

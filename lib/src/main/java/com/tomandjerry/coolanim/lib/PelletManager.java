@@ -2,6 +2,8 @@ package com.tomandjerry.coolanim.lib;
 
 import android.graphics.Canvas;
 
+import com.tomandjerry.coolanim.lib.letter.ALetter;
+import com.tomandjerry.coolanim.lib.letter.DLetter;
 import com.tomandjerry.coolanim.lib.letter.ILetter;
 import com.tomandjerry.coolanim.lib.letter.LLetter;
 import com.tomandjerry.coolanim.lib.letter.Letter;
@@ -31,13 +33,15 @@ public class PelletManager {
     }
 
     public void initPellets(){
-        this.setPellet(new FirstPellet(200, 300));
-        this.setPellet(new ThirdPellet(400, 300));
-        this.setPellet(new SecondPellet(300, 300));
-        this.setPellet(new ForthPellet(500, 300));
-        this.setLetter(new LLetter(100, 300));
-        this.setLetter(new OLetter(600, 300));
-        this.setLetter(new ILetter(500, 500));
+        this.addPellet(new FirstPellet(200, 300));
+        this.addPellet(new ThirdPellet(400, 300));
+        this.addPellet(new SecondPellet(300, 300));
+        this.addPellet(new ForthPellet(500, 300));
+        this.addLetter(new LLetter(100, 500));
+        this.addLetter(new OLetter(220, 500));
+        this.addLetter(new ALetter(340, 500));
+        this.addLetter(new DLetter(460, 500));
+        this.addLetter(new ILetter(580, 500));
         mBall = SmallYellowBall.getInstance();
 
         showText();
@@ -49,14 +53,14 @@ public class PelletManager {
         }
     }
 
-    public void setPellet(Pellet pellet){
+    public void addPellet(Pellet pellet){
         if(pellet != null){
             mPellets.add(pellet);
             pellet.prepareAnim();
         }
     }
 
-    public void setLetter(Letter letter) {
+    public void addLetter(Letter letter) {
         if (letter != null) {
             mLetters.add(letter);
         }
