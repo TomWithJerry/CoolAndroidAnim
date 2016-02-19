@@ -3,7 +3,9 @@ package com.tomandjerry.coolanim.lib;
 import android.graphics.Canvas;
 
 import com.tomandjerry.coolanim.lib.letter.ILetter;
+import com.tomandjerry.coolanim.lib.letter.LLetter;
 import com.tomandjerry.coolanim.lib.letter.Letter;
+import com.tomandjerry.coolanim.lib.letter.OLetter;
 import com.tomandjerry.coolanim.lib.pellet.ForthPellet;
 import com.tomandjerry.coolanim.lib.pellet.Pellet;
 import com.tomandjerry.coolanim.lib.pellet.SmallYellowBall;
@@ -29,11 +31,13 @@ public class PelletManager {
     }
 
     public void initPellets(){
-//        this.setPellet(new FirstPellet(200, 300));
+        this.setPellet(new FirstPellet(200, 300));
         this.setPellet(new ThirdPellet(400, 300));
-//        this.setPellet(new SecondPellet(300, 300));
+        this.setPellet(new SecondPellet(300, 300));
         this.setPellet(new ForthPellet(500, 300));
-        this.setLetter(new ILetter(50, 500));
+        this.setLetter(new LLetter(100, 300));
+        this.setLetter(new OLetter(600, 300));
+        this.setLetter(new ILetter(500, 500));
         mBall = SmallYellowBall.getInstance();
 
         showText();

@@ -105,27 +105,31 @@ public class SecondPellet extends Pellet {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float factor = (float) animation.getAnimatedValue();
+                float changeValue = 0;
                 if (factor < 1) {
                     mLineRightOffset = (int) (MOVE_MAX_LINTH * factor);
                 } else {
+                    changeValue = 2 - factor;
                     //线变短变成圆一会消失，交给第三个小球处理
                     mIsCirLineShow = false;
-                    mAroundLineDegrees = (int) (90 * (2 - factor));
+                    mAroundLineDegrees = (int) (90 * changeValue);
                     if (factor < 1.5) {
-                        mAroundLineInsideP = MAX_RADIUS_CIRCLE - (int) (MAX_RADIUS_CIRCLE * (1.5f - factor) * 2);
+                        changeValue = (1.5f - factor) * 2;
+                        mAroundLineInsideP = MAX_RADIUS_CIRCLE - (int) (MAX_RADIUS_CIRCLE * changeValue);
                         //红球缩小至20时就停止缩小
                         if (mRedCirCleRadius > 20) {
-                            mRedCirStrokeFactor = (int) (50 * (1.5 - factor) * 2);
+                            mRedCirStrokeFactor = (int) (50 * changeValue);
                             mRedCirCleRadius = MAX_RADIUS_CIRCLE - mAroundLineInsideP;
                         }
                         //中心小黄球出现
-                        mFirYellowCirRadius = (int) (10 * (factor - 1) * 2);
+                        mFirYellowCirRadius = (int) (10 * (1 - changeValue));
                     }
                     //底层黄球出现（环）
                     if (factor > 1.5) {
+                        changeValue = (factor - 1.5f) * 2;
                         mIsAroundPointV = true;
-                        mAroundPointY = (int) ((MAX_RADIUS_CIRCLE / 2) * (factor - 1.5f) * 2);
-                        mSecYellowCirRadius = (int) (30 * (factor - 1.5f) * 2);
+                        mAroundPointY = (int) ((MAX_RADIUS_CIRCLE / 2) * changeValue);
+                        mSecYellowCirRadius = (int) (30 * changeValue);
                     }
                 }
             }
@@ -144,32 +148,36 @@ public class SecondPellet extends Pellet {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float factor = (float) animation.getAnimatedValue();
+                float changeValue = 0;
                 if (factor < 1.0f) {
                     //黄球放大
                     mSecYellowCirRadius = (int) (30 + 15 * (factor));
                 } else if (factor < 2.0f) {
+                    changeValue = 2 - factor;
                     //黄球缩小
-                    mSecYellowCirRadius = (int) (45 * (2 - factor));
+                    mSecYellowCirRadius = (int) (45 * changeValue);
                     //点成线
-                    mAroundLineInsideP = MAX_RADIUS_CIRCLE - (int) (MAX_RADIUS_CIRCLE / 3 * (factor - 1));
+                    mAroundLineInsideP = MAX_RADIUS_CIRCLE - (int) (MAX_RADIUS_CIRCLE / 3 * (1 - changeValue));
                 } else if (factor < 2.25f) {
                     //停顿一下。
                 } else if (factor < 3.0f) {
+                    changeValue = (3.0f - factor) * 4 / 3;
                     //线内聚
                     mIsAroundPointV = false;
-                    mAroundLineOutsideP = (int) (MAX_RADIUS_CIRCLE * ((3.0f - factor) * 4 / 3));
-                    mAroundLineInsideP = (int) (MAX_RADIUS_CIRCLE / 3 * 2 * ((3.0f - factor) * 4 / 3));
+                    mAroundLineOutsideP = (int) (MAX_RADIUS_CIRCLE * changeValue);
+                    mAroundLineInsideP = (int) (MAX_RADIUS_CIRCLE / 3 * 2 * changeValue);
                     //黄球缩小,红球放大
-                    mFirYellowCirRadius = (int) (10 * ((3.0f - factor) * 4 / 3));
+                    mFirYellowCirRadius = (int) (10 * changeValue);
                     mRedCirStrokeFactor = 30;//(int) (16 + 10 * (1 - (3.0f - factor) * 4 / 3));
-                    mRedCirCleRadius = (int) (20 + 15 * (1 - (3.0f - factor) * 4 / 3));
+                    mRedCirCleRadius = (int) (20 + 15 * (1 - changeValue));
                 } else if (factor < 4.0f) {
                     //停顿一下
                 } else if (factor < 5.0f) {
+                    changeValue = factor - 4.0f;
                     //红球（环）内边外扩，内部黄球放大
-                    mFirYellowCirRadius = (int) (20 * (factor - 4.0f));
-                    mRedCirStrokeFactor = (int) (30 - 16 * (factor - 4.0f));
-                    mRedCirCleRadius = (int) (35 + 8 * (factor - 4.0));
+                    mFirYellowCirRadius = (int) (20 * changeValue);
+                    mRedCirStrokeFactor = (int) (30 - 16 * changeValue);
+                    mRedCirCleRadius = (int) (35 + 8 * changeValue);
                 }
             }
         });

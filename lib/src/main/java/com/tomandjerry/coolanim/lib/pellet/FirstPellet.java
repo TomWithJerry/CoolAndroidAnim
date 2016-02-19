@@ -2,7 +2,6 @@ package com.tomandjerry.coolanim.lib.pellet;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.graphics.Canvas;
@@ -253,7 +252,7 @@ public class FirstPellet extends Pellet {
         canvas.drawArc(mRectF, 0, mAroundArcLength, false, mPaint);
         canvas.restore();
 
-        mPaint.setColor(Config.BLUE);
+        mPaint.setColor(Color.BLUE);
         mPaint.setStrokeWidth(mPreFirCirRadius);
         canvas.drawCircle(getCurX(), getCurY(), mPreFirCirRadius / 2, mPaint);
     }
