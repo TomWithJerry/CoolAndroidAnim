@@ -13,17 +13,26 @@ import android.graphics.Path;
  */
 public class SecondPellet extends Pellet {
 
-    private final int MOVE_MAX_LINTH = 200;//移动长度
-    private final int LINE_STROKE_LENGTH = 8;//应为AROUND_POINT_RADIUS*2;
-    private final int AROUND_POINT_RADIUS = 4;//环绕行星半径
+    //移动长度
+    private final int MOVE_MAX_LINTH = 200;
+    //环绕线粗，应为AROUND_POINT_RADIUS*2;
+    private final int LINE_STROKE_LENGTH = 8;
+    //环绕行星(圆)半径
+    private final int AROUND_POINT_RADIUS = 4;
 
-    private int mFirCirCleRadius = 50;//红球外半径,比最大半径稍微一点
-    private int mFirCirStrokeFactor;//红球内半径
-    private int mAroundLineLength = MAX_RADIUS_CIRCLE;
+    //红球外半径,比最大半径稍微一点
+    private int mRedCirCleRadius = 50;
+    //红球内半径
+    private int mRedCirStrokeFactor;
+    //环绕线内点
+    private int mAroundLineInsideP = MAX_RADIUS_CIRCLE;
+    //环绕线外点
+    private int mAroundLineOutsideP = MAX_RADIUS_CIRCLE;
+    //环绕角度
     private int mAroundLineDegrees = 0;
+    //环绕偏离中心的坐标
     private int mAroundPointY = 0;
-    private int mPointAlpha;
-    private int mRedCirRadius;
+
 
     //这个方式待修改完善。
     private int mFirYellowCirRadius;
@@ -31,22 +40,18 @@ public class SecondPellet extends Pellet {
     private int mLineRightOffset;//黄球右偏移
     private int mLineStrokeWidth = 120;
 
+    private boolean mIsCirLineShow = true;
     private boolean mIsAroundPointV = false;//环绕行星可见性
 
     private Path mPath;
 
-
+    //第二个黄色球
     private int mSecYellowCirRadius;
-    private int mCurNum;
     private Paint mPaint;
 
     private ValueAnimator firAnimator;
     private ValueAnimator secAnimator;
-    private ValueAnimator thirAnimator;
-    private ValueAnimator fourthAnimator;
-    private ValueAnimator fifthAnimator;
-    private ValueAnimator sixthAnimator;
-    private ValueAnimator sevenAnimator;
+    private ValueAnimator thirdAnimator;
 
 
     public SecondPellet(int x, int y) {
@@ -59,12 +64,9 @@ public class SecondPellet extends Pellet {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setAntiAlias(true);
-        mRedCirRadius = 80;
-        mFirYellowCirRadius = 100;
-        mSecYellowCirRadius = 0;
 
         //黄色圆出现->黄色圆变成圆边矩形
-        firAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(1600);
+        firAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(1000);
         firAnimator.setRepeatCount(0);
         firAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -72,7 +74,7 @@ public class SecondPellet extends Pellet {
                 float factor = (float) animation.getAnimatedValue();
                 if (factor < 1) {
                     mFirYellowCirRadius = 20 + (int) ((float) animation.getAnimatedValue() * (MAX_RADIUS_CIRCLE - 20));
-                    mFirCirStrokeFactor = (int) (20 + (float) animation.getAnimatedValue() * 20);
+                    mRedCirStrokeFactor = (int) (14 + (float) animation.getAnimatedValue() * 20);
                 } else {
                     mLineLeftOffset = (int) (MOVE_MAX_LINTH * (factor - 1));
                 }
@@ -82,15 +84,21 @@ public class SecondPellet extends Pellet {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mFirYellowCirRadius = 0;
-                mFirCirCleRadius = 60;
-                mFirCirStrokeFactor = 50;
+                mRedCirCleRadius = 60;
+                mRedCirStrokeFactor = 50;
+                mSecYellowCirRadius = 0;
                 secAnimator.start();
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mIsCirLineShow = true;
             }
         });
         firAnimator.start();
 
 
-        secAnimator = ValueAnimator.ofFloat(0, 0.5f, 1, 1.25f, 1.5f, 1.75f, 2,2.5f,2).setDuration(2400 + 800);
+        secAnimator = ValueAnimator.ofFloat(0, 0.5f, 1, 1.25f, 1.5f, 1.75f, 2).setDuration(2400);
         secAnimator.setRepeatCount(0);
         secAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -98,13 +106,14 @@ public class SecondPellet extends Pellet {
                 float factor = (float) animation.getAnimatedValue();
                 if (factor < 1) {
                     mLineRightOffset = (int) (MOVE_MAX_LINTH * factor);
-                } else if (factor < 2) {
+                } else {
+                    mIsCirLineShow = false;//线变短变成圆一会消失，交给第三个小球处理
                     mAroundLineDegrees = (int) (90 * (2 - factor));
                     if (factor < 1.5) {
-                        mAroundLineLength = MAX_RADIUS_CIRCLE - (int) (MAX_RADIUS_CIRCLE * (1.5f - factor) * 2);
-                        if (mFirCirCleRadius > 20) {//红球缩小至20时就停止缩小
-                            mFirCirStrokeFactor = (int) (50 * (1.5 - factor) * 2);
-                            mFirCirCleRadius = MAX_RADIUS_CIRCLE - mAroundLineLength;
+                        mAroundLineInsideP = MAX_RADIUS_CIRCLE - (int) (MAX_RADIUS_CIRCLE * (1.5f - factor) * 2);
+                        if (mRedCirCleRadius > 20) {//红球缩小至20时就停止缩小
+                            mRedCirStrokeFactor = (int) (50 * (1.5 - factor) * 2);
+                            mRedCirCleRadius = MAX_RADIUS_CIRCLE - mAroundLineInsideP;
                         }
                         mFirYellowCirRadius = (int) (10 * (factor - 1) * 2);
                     }
@@ -113,57 +122,91 @@ public class SecondPellet extends Pellet {
                         mAroundPointY = (int) ((MAX_RADIUS_CIRCLE / 2) * (factor - 1.5f) * 2);
                         mSecYellowCirRadius = (int) (30 * (factor - 1.5f) * 2);
                     }
-                }else {
-                    mSecYellowCirRadius = (int) (30 + 15 * (factor-2));
                 }
             }
         });
         secAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mAroundLineLength = MAX_RADIUS_CIRCLE;
-                mLineLeftOffset = 0;
-                mLineRightOffset = 0;
-                mIsAroundPointV = false;
-                firAnimator.start();
+                thirdAnimator.start();
             }
         });
 
-//        thirAnimator = ValueAnimator.ofFloat(0,1,2).setDuration(2400);
-//        thirAnimator.setRepeatCount(0);
-//        thirAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator animation) {
-//                float factor = (float) animation.getAnimatedValue();
-//                //完成后在拆开后续动画
-//            }
-//        });
-
+        //黄球放大，再缩小，缩小过程伴随着环绕行星点变线向内伸长。
+        thirdAnimator = ValueAnimator.ofFloat(0, 5).setDuration(3000);
+        thirdAnimator.setRepeatCount(0);
+        thirdAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float factor = (float) animation.getAnimatedValue();
+                if (factor < 1.0f) {
+                    //黄球放大
+                    mSecYellowCirRadius = (int) (30 + 15 * (factor));
+                } else if (factor < 2.0f) {
+                    //黄球缩小
+                    mSecYellowCirRadius = (int) (45 * (2 - factor));
+                    //点成线
+                    mAroundLineInsideP = MAX_RADIUS_CIRCLE - (int) (MAX_RADIUS_CIRCLE / 3 * (factor - 1));
+                } else if (factor < 2.25f) {
+                    //停顿一下。
+                } else if (factor < 3.0f) {
+                    //线内聚
+                    mIsAroundPointV = false;
+                    mAroundLineOutsideP = (int) (MAX_RADIUS_CIRCLE * ((3.0f - factor) * 4 / 3));
+                    mAroundLineInsideP = (int) (MAX_RADIUS_CIRCLE / 3 * 2 * ((3.0f - factor) * 4 / 3));
+                    //黄球缩小,红球放大
+                    mFirYellowCirRadius = (int) (10 * ((3.0f - factor) * 4 / 3));
+                    mRedCirStrokeFactor = 30;//(int) (16 + 10 * (1 - (3.0f - factor) * 4 / 3));
+                    mRedCirCleRadius = (int) (20 + 15 * (1 - (3.0f - factor) * 4 / 3));
+                } else if (factor < 4.0f) {
+                    //停顿一下
+                } else if (factor < 5.0f) {
+                    mFirYellowCirRadius = (int) (20 * (factor - 4.0f));
+                    mRedCirStrokeFactor = (int) (30 - 16 * (factor - 4.0f));
+                    mRedCirCleRadius = (int) (35 + 8 * (factor - 4.0));
+                } else {
+                }
+            }
+        });
+        thirdAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mAroundLineInsideP = MAX_RADIUS_CIRCLE;
+                mAroundLineOutsideP = MAX_RADIUS_CIRCLE;
+                mLineLeftOffset = 0;
+                mLineRightOffset = 0;
+                firAnimator.start();
+            }
+        });
 
 
     }
 
     @Override
     public void drawSelf(Canvas canvas) {
+
         if (mPaint.getStyle() != Paint.Style.STROKE) {
             mPaint.setStyle(Paint.Style.STROKE);
         }
         mPaint.setColor(Color.YELLOW);
         mPaint.setStrokeWidth(mSecYellowCirRadius);
-        canvas.drawCircle(300, 300, mSecYellowCirRadius / 2, mPaint);
+        canvas.drawCircle(getCurX(), getCurY(), mSecYellowCirRadius / 2, mPaint);
 
         mPaint.setColor(Color.RED);
-        mPaint.setStrokeWidth(mFirCirStrokeFactor);
-        canvas.drawCircle(300, 300, mFirCirCleRadius - mFirCirStrokeFactor / 2, mPaint);
+        mPaint.setStrokeWidth(mRedCirStrokeFactor);
+        canvas.drawCircle(getCurX(), getCurY(), mRedCirCleRadius - mRedCirStrokeFactor / 2, mPaint);
 
         mPaint.setColor(Color.YELLOW);
         mPaint.setStrokeWidth(mFirYellowCirRadius);
-        canvas.drawCircle(300, 300, mFirYellowCirRadius / 2, mPaint);
+        canvas.drawCircle(getCurX(), getCurY(), mFirYellowCirRadius / 2, mPaint);
 
 
         //黄色圆移动，等同圆角的线
-        mPaint.setStrokeWidth(mLineStrokeWidth);
-        canvas.drawLine(300 + mLineRightOffset, 300, 300 + mLineLeftOffset, 300, mPaint);
+        //TODO 结尾问题。
+        if (mIsCirLineShow) {
+            mPaint.setStrokeWidth(mLineStrokeWidth);
+            canvas.drawLine(getCurX() + mLineRightOffset, getCurY(), getCurX() + mLineLeftOffset, getCurY(), mPaint);
+        }
 
         drawAroundLine(canvas);
         if (mIsAroundPointV == true) {
@@ -178,7 +221,7 @@ public class SecondPellet extends Pellet {
         for (int i = 0; i < 8; i++) {
             canvas.save();
             canvas.rotate(45 * i + mAroundLineDegrees, getCurX(), getCurY());
-            canvas.drawLine(getCurX(), getCurY() - MAX_RADIUS_CIRCLE, getCurX(), getCurY() - mAroundLineLength, mPaint);
+            canvas.drawLine(getCurX(), getCurY() - mAroundLineOutsideP, getCurX(), getCurY() - mAroundLineInsideP, mPaint);
             canvas.restore();
         }
     }
@@ -196,10 +239,6 @@ public class SecondPellet extends Pellet {
 
     @Override
     public void startAnimation() {
-
-    }
-
-    private void setPaintColor() {
 
     }
 }
