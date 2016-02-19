@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.tomandjerry.coolanim.lib.Config;
 
@@ -24,8 +23,6 @@ public class ThirdPellet extends Pellet {
     // 第二个圆或圆环或圆弧的半径和画笔大小
     private float mSeCurR;
     private float mSeStrokeWidth;
-    // 正常圆(能停留的)最大的直径
-    private float STANDARD_MAX_R;
     // 正常圆(能停留的)最大的stroke
     private float STANDARD_MIN_R;
     // 前一个值
@@ -73,7 +70,6 @@ public class ThirdPellet extends Pellet {
         mFiStrokeWidth = 30;
         mSeCurR = 15;
         mSeStrokeWidth = 15;
-        STANDARD_MAX_R = 50;
         STANDARD_MIN_R = 15;
 
     }
@@ -109,7 +105,7 @@ public class ThirdPellet extends Pellet {
      * @return
      */
     protected ValueAnimator createBackAnim() {
-        final float rate = (STANDARD_MAX_R - 45) / 30F;
+        final float rate = (MAX_RADIUS_CIRCLE - 45) / 30F;
         ValueAnimator backAnim = ValueAnimator.ofFloat(45, STANDARD_MIN_R);
         backAnim.setDuration(mDuration4);
         backAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -149,9 +145,9 @@ public class ThirdPellet extends Pellet {
         // 红色内圆膨胀大小
         float redFlattenValue = mFiStrokeWidth - gap - mSeStrokeWidth;
         // 减去多一个值是因为内圆膨胀的时候,半径也会增加
-        float bothFlattenValue = STANDARD_MAX_R - mSeCurR - redFlattenValue / 2;
+        float bothFlattenValue = MAX_RADIUS_CIRCLE - mSeCurR - redFlattenValue / 2;
         // 绿色弧放大的速度,红色圆放大速率为1
-        final float rate = (STANDARD_MAX_R - mFiCurR) / bothFlattenValue;
+        final float rate = (MAX_RADIUS_CIRCLE - mFiCurR) / bothFlattenValue;
         // 第一个参数
         float fiv = 0;
         // 第二个参数,外圆内半径扩大距离
@@ -207,14 +203,14 @@ public class ThirdPellet extends Pellet {
      */
     protected ValueAnimator createSmallerAndRotateAnim() {
         mOval = new RectF(getCurX(),getCurY(),getCurX(),getCurY());
-        mRedOval = new RectF(getCurX() - STANDARD_MAX_R + 5, getCurY() - STANDARD_MAX_R + 5,
-                getCurX() + STANDARD_MAX_R - 5, getCurY() + STANDARD_MAX_R - 5);
+        mRedOval = new RectF(getCurX() - MAX_RADIUS_CIRCLE + 5, getCurY() - MAX_RADIUS_CIRCLE + 5,
+                getCurX() + MAX_RADIUS_CIRCLE - 5, getCurY() + MAX_RADIUS_CIRCLE - 5);
         mAngle = 0;
         // 绿色弧线默认弧长GAP_ANGLE=240
         mGapGreenAngle = GAP_ANGLE;
         // 根据角度来调整圆大小的缩放比例
-        final float rate1 = (STANDARD_MAX_R - STANDARD_MIN_R) / 120;
-        final float rate2 = (STANDARD_MAX_R - STANDARD_MIN_R) / 120;
+        final float rate1 = (MAX_RADIUS_CIRCLE - STANDARD_MIN_R) / 120;
+        final float rate2 = (MAX_RADIUS_CIRCLE - STANDARD_MIN_R) / 120;
         mRedAngle = 60;
         mGapRedAngle = 0;
         // 红色弧线开口逐渐合并
@@ -230,7 +226,7 @@ public class ThirdPellet extends Pellet {
                 if (mCurValue <= 120) {
                     // 小黄球缩小
                     mState = 2;
-                    mSeCurR = STANDARD_MAX_R - mCurValue * rate1;
+                    mSeCurR = MAX_RADIUS_CIRCLE - mCurValue * rate1;
                     mSeStrokeWidth = mSeCurR;
                     mDifValue = mCurValue * rate1 + STANDARD_MIN_R - mFiStrokeWidth / 2;
                     mOval.set(getCurX() - mDifValue, getCurY() - mDifValue, getCurX() + mDifValue, getCurY() + mDifValue);
@@ -242,7 +238,7 @@ public class ThirdPellet extends Pellet {
                     // 绿色圆弧缩小
                     mGapGreenAngle = (int) (GAP_ANGLE + mCurValue - 300);
                     if (mCurValue > 300 && mCurValue <= 420) {
-                        mDifValue = STANDARD_MAX_R - (mCurValue - 300) * rate2 - mFiStrokeWidth / 2;
+                        mDifValue = MAX_RADIUS_CIRCLE - (mCurValue - 300) * rate2 - mFiStrokeWidth / 2;
                         mOval.set(getCurX() - mDifValue, getCurY() - mDifValue, getCurX() + mDifValue, getCurY() + mDifValue);
                     }
 
