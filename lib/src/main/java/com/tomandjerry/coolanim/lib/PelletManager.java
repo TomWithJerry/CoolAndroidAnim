@@ -30,9 +30,9 @@ public class PelletManager {
 
     public void initPellets(){
         this.setPellet(new FirstPellet(200, 300));
+        this.setPellet(new ThirdPellet(400, 300));
         this.setPellet(new SecondPellet(300, 300));
-        this.setPellet(new ThirdPellet(200, 500));
-        this.setPellet(new ForthPellet(300, 500));
+        this.setPellet(new ForthPellet(500, 300));
         this.setLetter(new ILetter(50, 500));
         mBall = SmallYellowBall.getInstance();
 
