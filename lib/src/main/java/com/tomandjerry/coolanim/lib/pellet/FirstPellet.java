@@ -22,8 +22,10 @@ public class FirstPellet extends Pellet {
     private final int FIRST_CIRCLE_START_RADIUS = 40;
     //环绕行星最大半径
     private final int SECOND_CIRCLE_MAX_RADIUS = 10;
-    private final int THIRD_CIRCLE_MIN_STROKEWIDTH = 15;//黄色圆的线粗最小值
-    private final int DIVIDE_DEGREES = 35;
+    //黄色圆的线粗最小值
+    private final int THIRD_CIRCLE_MIN_STROKEWIDTH = 15;
+    //环绕行星角度间隔
+    private final int DIVIDE_DEGREES = 36;
 
     private Paint mPaint;
     private RectF mRectF;
@@ -45,14 +47,11 @@ public class FirstPellet extends Pellet {
     //最后的蓝圆，对应最开始的蓝圆
     private int mPreFirCirRadius;
 
-    private ValueAnimator firAnimator;
-    private ValueAnimator firAnimator2;
-    private ValueAnimator secAnimator;
-    private ValueAnimator thirAnimator;
-    private ValueAnimator fourthAnimator;
-    private ValueAnimator fifthAnimator;
-    private ValueAnimator sixthAnimator;
-    private ValueAnimator sevenAnimator;
+    private ValueAnimator mFirAnimator;
+    private ValueAnimator mSecAnimator;
+    private ValueAnimator mThiAnimator;
+    private ValueAnimator mFouAnimator;
+    private ValueAnimator mFifAnimator;
 
     public FirstPellet(int x, int y) {
         super(x, y);
@@ -69,11 +68,10 @@ public class FirstPellet extends Pellet {
 
     @Override
     protected void initAnim() {
-
         //初始的蓝色球大小变化
-        firAnimator = ValueAnimator.ofInt(FIRST_CIRCLE_START_RADIUS, FIRST_CIRCLE_START_RADIUS + 10, FIRST_CIRCLE_START_RADIUS).setDuration(800);
-        firAnimator.setRepeatCount(0);
-        firAnimator.addUpdateListener(
+        mFirAnimator = ValueAnimator.ofInt(FIRST_CIRCLE_START_RADIUS, FIRST_CIRCLE_START_RADIUS + 10, FIRST_CIRCLE_START_RADIUS).setDuration(500);
+        mFirAnimator.setRepeatCount(0);
+        mFirAnimator.addUpdateListener(
                 new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
@@ -81,55 +79,52 @@ public class FirstPellet extends Pellet {
                     }
                 }
         );
-        firAnimator.addListener(new AnimatorListenerAdapter() {
+        mFirAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationRepeat(animation);
                 mPreFirCirRadius = 0;//将顶层的蓝色圆半径置0;
                 mThiCirRadius = 0;
                 mThiCirStrokeWidth = 0;
-                secAnimator.start();
-                thirAnimator.start();
+                mSecAnimator.start();
             }
         });
-        firAnimator.start();
+        mFirAnimator.start();
 
-        //环绕行星的大小变化
-        secAnimator = ValueAnimator.ofFloat(0, 1, 1, 0).setDuration(1600);
-        secAnimator.setRepeatCount(0);
-        secAnimator.addUpdateListener(
+        //环绕行星动画
+        mSecAnimator = ValueAnimator.ofFloat(0, 1).setDuration(2000);
+        mSecAnimator.setRepeatCount(0);
+        mSecAnimator.addUpdateListener(
                 new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
-                        mSecCirRadius = (int) ((float) animation.getAnimatedValue() * SECOND_CIRCLE_MAX_RADIUS);
+                        float zoroToOne = (float) animation.getAnimatedValue();
+                        //环绕行星的旋转角度
+                        mAroundCirDegrees = (int) (90 + 180 * zoroToOne);
+                        if (zoroToOne < 0.5f) {
+                            zoroToOne = zoroToOne * 2;
+                            //环绕行星的大小变化
+                            mSecCirRadius = (int) (zoroToOne * SECOND_CIRCLE_MAX_RADIUS);
+                        } else {
+                            zoroToOne = (1 - zoroToOne) * 2;
+                            mSecCirRadius = (int) (zoroToOne * SECOND_CIRCLE_MAX_RADIUS);
+                        }
                     }
                 }
         );
-
-        //环绕行星的旋转角度
-        thirAnimator = ValueAnimator.ofInt(90, 180).setDuration(1600);
-        thirAnimator.setRepeatCount(0);
-        thirAnimator.addUpdateListener(
-                new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        mAroundCirDegrees = (int) animation.getAnimatedValue();
-                    }
-                }
-        );
-        thirAnimator.addListener(new AnimatorListenerAdapter() {
+        mSecAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                fourthAnimator.start();
-                firAnimator2.start();
+                mFouAnimator.start();
+                mThiAnimator.start();
             }
         });
 
-        //环绕结束蓝色圆有一个变大的动作
-        firAnimator2 = ValueAnimator.ofInt(FIRST_CIRCLE_START_RADIUS, FIRST_CIRCLE_START_RADIUS + 10, 20, 20).setDuration(1600);
-        firAnimator2.setRepeatCount(0);
-        firAnimator2.addUpdateListener(
+        //环绕结束后蓝色圆有一个变大的动作
+        mThiAnimator = ValueAnimator.ofInt(FIRST_CIRCLE_START_RADIUS, FIRST_CIRCLE_START_RADIUS + 10, 20, 20).setDuration(500);
+        mThiAnimator.setRepeatCount(0);
+        mThiAnimator.addUpdateListener(
                 new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
@@ -139,75 +134,57 @@ public class FirstPellet extends Pellet {
         );
 
         //环绕结束黄色的圆出现覆盖并缩小
-        fourthAnimator = ValueAnimator.ofFloat(0, 1).setDuration(1600);
-        fourthAnimator.setRepeatCount(0);
-        fourthAnimator.addUpdateListener(
+        mFouAnimator = ValueAnimator.ofFloat(0, 1).setDuration(1000);
+        mFouAnimator.setRepeatCount(0);
+        mFouAnimator.addUpdateListener(
                 new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
-
                         mThiCirRadius = (int) (20 + 80 * (1 - (float) animation.getAnimatedValue()));//变化范围60～20.
                         mThiCirStrokeWidth = 15 + (int) ((float) animation.getAnimatedValue() * THIRD_CIRCLE_MIN_STROKEWIDTH);
                     }
                 }
         );
-        fourthAnimator.addListener(new AnimatorListenerAdapter() {
+        mFouAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                fifthAnimator.start();
-                sixthAnimator.start();
+                mFifAnimator.start();
             }
         });
 
-        //弧形动画旋转启动
-        fifthAnimator = ValueAnimator.ofInt(-120, 750).setDuration(1600);
-        fifthAnimator.setRepeatCount(0);
-        fifthAnimator.addUpdateListener(
+        //
+        //弧形动画旋转启动,弧形角度长度变化＋蓝色球放大动画
+        mFifAnimator = ValueAnimator.ofFloat(0, 0.5f, 1, 2).setDuration(2000);
+        mFifAnimator.setRepeatCount(0);
+        mFifAnimator.addUpdateListener(
                 new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
-                        mAroundArcDegrees = (int) animation.getAnimatedValue();
+                        float zoroToOne = (float) animation.getAnimatedValue();
+                        if (zoroToOne < 0.5f) {
+                            mAroundArcDegrees = (int) (-120 + 880 * zoroToOne);
+                            zoroToOne = zoroToOne * 2;
+                            mAroundArcLength = (int) (180 * zoroToOne);
+                        } else if (zoroToOne <= 1.000f) {
+                            mAroundArcDegrees = (int) (-120 + 880 * zoroToOne);
+                            zoroToOne = (1 - zoroToOne) * 2;
+                            mAroundArcLength = (int) (180 * zoroToOne);
+                        } else {
+                            mAroundArcLength = 0;
+                            zoroToOne = zoroToOne - 1;
+                            mPreFirCirRadius = (int) (40 * zoroToOne);
+                        }
                     }
                 }
         );
-        fifthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-
-        //弧形长度变化
-        sixthAnimator = ValueAnimator.ofInt(0, 180, 0).setDuration(1600);
-        sixthAnimator.setRepeatCount(0);
-        sixthAnimator.addUpdateListener(
-                new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        mAroundArcLength = (int) animation.getAnimatedValue();
-                    }
-                }
-        );
-        sixthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        sixthAnimator.addListener(new AnimatorListenerAdapter() {
+        mFifAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        mFifAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                sevenAnimator.start();
-            }
-        });
+                mFirAnimator.start();
 
-        sevenAnimator = ValueAnimator.ofInt(0, FIRST_CIRCLE_START_RADIUS).setDuration(800);
-        sevenAnimator.setRepeatCount(0);
-        sevenAnimator.addUpdateListener(
-                new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        mPreFirCirRadius = (int) animation.getAnimatedValue();
-                    }
-                }
-        );
-        sevenAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                firAnimator.start();
             }
         });
     }
@@ -229,7 +206,7 @@ public class FirstPellet extends Pellet {
         //环绕行星
         //TODO 关系
         mPaint.setColor(Config.GREEN);
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             canvas.save();
             mPaint.setStrokeWidth(mSecCirRadius);
             canvas.rotate(90 + i * DIVIDE_DEGREES + mAroundCirDegrees, getCurX(), getCurY());
@@ -244,13 +221,9 @@ public class FirstPellet extends Pellet {
 
 
         //扇形弧线
-        //TODO 需要修改实现
         mPaint.setColor(Color.BLUE);
-        canvas.save();
-        canvas.rotate(mAroundArcDegrees, getCurX(), getCurY());
         mPaint.setStrokeWidth(20);
-        canvas.drawArc(mRectF, 0, mAroundArcLength, false, mPaint);
-        canvas.restore();
+        canvas.drawArc(mRectF, mAroundArcDegrees, mAroundArcLength, false, mPaint);
 
         mPaint.setColor(Color.BLUE);
         mPaint.setStrokeWidth(mPreFirCirRadius);
