@@ -61,6 +61,7 @@ public class PelletManager {
         if(pellet != null){
             mPellets.add(pellet);
             pellet.prepareAnim();
+            pellet.endAnim();
         }
     }
 

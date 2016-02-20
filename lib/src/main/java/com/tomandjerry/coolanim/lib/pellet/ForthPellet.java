@@ -50,6 +50,10 @@ public class ForthPellet extends Pellet {
     private int mDuration5 = 1200;
     private int mDuration6 = 200;
 
+    private int mEndCirIRadius;
+    private int mEndCirMRadius;
+    private int mEndCirORadius;
+    private ValueAnimator mEndAnimator;
 
     public ForthPellet(int x, int y) {
         super(x, y);
@@ -100,8 +104,33 @@ public class ForthPellet extends Pellet {
     }
 
     @Override
-    public void startAnimation() {
-
+    protected void initEndAnim() {
+        mEndAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(3000);
+        mEndAnimator.setRepeatCount(3);
+        mEndAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float zoroToOne = (float) animation.getAnimatedValue();
+                if (zoroToOne <= 0.5f) {
+                    mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                    zoroToOne = 2 * zoroToOne;
+                    mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                } else if (zoroToOne <= 1.0f) {
+                    mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                    zoroToOne = 1 - 2 * (zoroToOne - 0.5f);
+                    mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                } else {
+                    zoroToOne = 2 - zoroToOne;
+                    mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                    if (zoroToOne >= 0.5f) {
+                        zoroToOne = (1.0f - zoroToOne) * 2;
+                    } else {
+                        zoroToOne = zoroToOne * 2;
+                    }
+                    mEndCirORadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                }
+            }
+        });
     }
 
     /**
@@ -436,5 +465,19 @@ public class ForthPellet extends Pellet {
                 break;
         }
 
+        if (mIsEnd) {
+            if (!mIsEndAnimStart) {
+                mEndAnimator.start();
+                mIsEndAnimStart = true;
+            }
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setColor(Config.YELLOW);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirIRadius, mPaint);
+            mPaint.setColor(Config.BLUE);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirMRadius, mPaint);
+            mPaint.setColor(Config.GREEN);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
+            mPaint.setStyle(Paint.Style.STROKE);
+        }
     }
 }
