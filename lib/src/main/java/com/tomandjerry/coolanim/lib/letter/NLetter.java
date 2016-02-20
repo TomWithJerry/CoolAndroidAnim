@@ -5,40 +5,44 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
 
 import com.tomandjerry.coolanim.lib.Config;
 
 /**
- * 字母i的绘制以及动画
- * Created by yanxing on 16/2/18.
+ * Created by yanxing on 16/2/19.
  */
-public class ILetter extends Letter {
+public class NLetter extends Letter {
+    private int mDuration = 1500;
+    private Paint mPaint;
+    private Path mPath;
+    private int mMoveX;
+    private int mMoveY;
     private int mCurValue;
     private boolean isStart = false;
-    private Paint mPaint;
-    // 竖线弹出的时间
-    private int mDuration1 = 1000;
-    // 圆球弹出的时间
-    private int mDuration2 = 500;
-    // 竖线变化的长度
-    private float mLength1;
-    // 圆球弹出的变化高度
-    private float mLength2;
-    // 圆球的半径
-    private int mRadius;
 
-    public ILetter(int x, int y) {
+    public NLetter(int x, int y) {
         super(x, y);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(Config.WHITE);
-        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(20);
+        mPath = new Path();
+        // 移动到起始位置
+        mMoveX = mCurX - 20;
+        mMoveY = mCurY;
+        mPath.moveTo(mMoveX, mMoveY);
+        mPath.lineTo(mMoveX, mMoveY - 50);
+        RectF mRectF = new RectF();
+        mRectF.set(mCurX - 20, mCurY - 20 - 50, mCurX + 20, mCurY + 20 - 50);
+        mPath.addArc(mRectF, 180, 180);
     }
 
     @Override
     public void startAnim() {
-        ValueAnimator animator = ValueAnimator.ofInt(0, mDuration1 + mDuration2);
-        animator.setDuration(mDuration1 + mDuration2);
+        ValueAnimator animator = ValueAnimator.ofInt(0, mDuration);
+        animator.setDuration(mDuration);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -46,21 +50,18 @@ public class ILetter extends Letter {
                     return;
                 }
                 mCurValue = (int) animation.getAnimatedValue();
-                if (mCurValue <= mDuration1) {
-                    mLength1 = mCurValue / 10;
-                } else {
-                    mCurValue -= mDuration1;
-                    mRadius = 12 * mCurValue / 500;
-                    mLength2 = 30 * mCurValue / 500;
-                }
-
+                mMoveY = mCurY - mCurValue / 10;
+//                mPath.lineTo(mMoveX, mMoveY);
             }
         });
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 isStart = true;
-                mRadius = 0;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
             }
         });
         animator.start();
@@ -69,10 +70,7 @@ public class ILetter extends Letter {
     @Override
     public void drawSelf(Canvas canvas) {
         if (isStart) {
-            // 绘制竖线
-            canvas.drawLine(mCurX, mCurY, mCurX, mCurY - mLength1, mPaint);
-            // 绘制圆点
-            canvas.drawCircle(mCurX, mCurY - mLength1 + 30 - mLength2 - 20, mRadius, mPaint);
+            canvas.drawPath(mPath, mPaint);
         }
     }
 }
