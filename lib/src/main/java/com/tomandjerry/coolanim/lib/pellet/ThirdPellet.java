@@ -52,10 +52,10 @@ public class ThirdPellet extends Pellet {
     //
     private boolean isStart = false;
     // 时间值
-    private int mDuration1 = 1500;
-    private int mDuration2 = 3000;
-    private int mDuration3 = 5000;
-    private int mDuration4 = 1500;
+    private int mDuration1 = 600;
+    private int mDuration2 = 600;
+    private int mDuration3 = 4000;
+    private int mDuration4 = 800;
 
     public ThirdPellet(int x, int y) {
         super(x, y);

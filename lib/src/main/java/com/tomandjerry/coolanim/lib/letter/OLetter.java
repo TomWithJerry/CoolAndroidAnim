@@ -35,8 +35,14 @@ public class OLetter extends Letter {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float factor = (float) animation.getAnimatedValue();
-                mStartAngle = (int) (180 * factor);
-                mSweepAngle = (int) (360*factor);
+                if(factor < 0.5f) {
+                    mStartAngle = (int) (90 * factor);
+                    mSweepAngle = (int) (180 * factor);
+                }else{
+                    float zoroToOne = (float) ((factor - 0.5) * 2);
+                    mStartAngle = (int) (45 + 135 * zoroToOne);
+                    mSweepAngle = (int) (90 + 270 * zoroToOne);
+                }
             }
         });
 
