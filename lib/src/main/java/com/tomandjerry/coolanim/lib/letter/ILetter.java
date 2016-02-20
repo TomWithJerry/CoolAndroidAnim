@@ -13,6 +13,9 @@ import com.tomandjerry.coolanim.lib.Config;
  * Created by yanxing on 16/2/18.
  */
 public class ILetter extends Letter {
+    public final static int STROKE_WIDTH = 20;
+    public final static int WIDTH = STROKE_WIDTH;
+    public final static int LENGTH = 120;
     private int mCurValue;
     private boolean isStart = false;
     private Paint mPaint;
@@ -33,6 +36,7 @@ public class ILetter extends Letter {
         mPaint.setColor(Config.WHITE);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setStrokeWidth(20);
+        mCurY += LENGTH / 2;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class ILetter extends Letter {
                 }
                 mCurValue = (int) animation.getAnimatedValue();
                 if (mCurValue <= mDuration1) {
-                    mLength1 = mCurValue / 10;
+                    mLength1 = LENGTH * mCurValue / mDuration1;
                 } else {
                     mCurValue -= mDuration1;
                     mRadius = 12 * mCurValue / 500;

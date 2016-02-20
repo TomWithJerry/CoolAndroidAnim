@@ -1,5 +1,7 @@
 package com.tomandjerry.coolanim.lib.pellet;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -46,6 +48,7 @@ public class SmallYellowBall {
     private float mAngle;
     // 球的压缩
     private float mShift;
+    private boolean isStart = false;
 
     private SmallYellowBall() {
         initConfig();
@@ -78,6 +81,9 @@ public class SmallYellowBall {
      * 分开四个段区域
      */
     public void throwOut() {
+        if (isStart) {
+            return;
+        }
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, mDuration);
         valueAnimator.setDuration((long) mDuration);
         // 3个节点
@@ -137,6 +143,18 @@ public class SmallYellowBall {
                     }
                 }
                 mCurX = mOriginX + curDistance;
+            }
+        });
+        valueAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                isStart = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isStart = false;
+                initConfig();
             }
         });
         valueAnimator.start();

@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 
 import com.tomandjerry.coolanim.lib.letter.ALetter;
 import com.tomandjerry.coolanim.lib.letter.DLetter;
+import com.tomandjerry.coolanim.lib.letter.GLetter;
 import com.tomandjerry.coolanim.lib.letter.ILetter;
 import com.tomandjerry.coolanim.lib.letter.LLetter;
 import com.tomandjerry.coolanim.lib.letter.Letter;
@@ -43,7 +44,8 @@ public class PelletManager {
         this.addLetter(new ALetter(340, 500));
         this.addLetter(new DLetter(460, 500));
         this.addLetter(new ILetter(580, 500));
-        this.addLetter(new NLetter(620, 500));
+        this.addLetter(new NLetter(700, 500));
+        this.addLetter(new GLetter(820, 500));
         mBall = SmallYellowBall.getInstance();
 
         showText();

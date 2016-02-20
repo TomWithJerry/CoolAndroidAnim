@@ -43,12 +43,12 @@ public class ForthPellet extends Pellet {
     //
     private RadialGradient mRadialGradient;
     // 时间值
-    private int mDuration1 = 1500;
-    private int mDuration2 = 3000;
+    private int mDuration1 = 600;
+    private int mDuration2 = 1000;
     private int mDuration3 = 2000;
     private int mDuration4 = 1000;
-    private int mDuration5 = 3500;
-    private int mDuration6 = 1000;
+    private int mDuration5 = 1200;
+    private int mDuration6 = 200;
 
 
     public ForthPellet(int x, int y) {
@@ -170,6 +170,7 @@ public class ForthPellet extends Pellet {
                     mAngle = mCurValue * 3;
                     mSweepAngle -= mDifValue * 2;
                 } else {
+                    mSweepAngle = 0;
                     positions[1] += (mCurValue - 180) * 0.01f;
                     mSweepGradient = new SweepGradient(getCurX(), getCurY(), colors, positions);
                 }
@@ -308,7 +309,7 @@ public class ForthPellet extends Pellet {
                     positions2[5] = 1;
                     positions2[4] = (mCurValue - 200) / 100f;
                     positions2[3] = positions2[4];
-                    positions2[2] = positions2[3] - 0.2f;
+                    positions2[2] = positions2[3] - 0.1f;
                     positions2[1] = positions2[2];
                     positions2[0] = 0;
                     mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth / 2, colors2, positions2, Shader.TileMode.CLAMP);
@@ -371,7 +372,7 @@ public class ForthPellet extends Pellet {
         animator.addListener(new AnimatorListenerAdapter() {
                  @Override
                  public void onAnimationStart(Animator animation) {
-                     mState = 3;
+                     mState = 1;
                      isStart = true;
                      mCurValue = 0;
                      mPreValue = 0;
