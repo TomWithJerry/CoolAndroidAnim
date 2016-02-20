@@ -56,6 +56,10 @@ public class SecondPellet extends Pellet {
     private ValueAnimator secAnimator;
     private ValueAnimator thirdAnimator;
 
+    private int mEndCirIRadius;
+    private int mEndCirMRadius;
+    private int mEndCirORadius;
+    private ValueAnimator mEndAnimator;
 
     public SecondPellet(int x, int y) {
         super(x, y);
@@ -199,6 +203,36 @@ public class SecondPellet extends Pellet {
     }
 
     @Override
+    protected void initEndAnim() {
+        mEndAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(3000);
+        mEndAnimator.setRepeatCount(3);
+        mEndAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float zoroToOne = (float) animation.getAnimatedValue();
+                if (zoroToOne <= 0.5f) {
+                    mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                    zoroToOne = 2 * zoroToOne;
+                    mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                } else if (zoroToOne <= 1.0f) {
+                    mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                    zoroToOne = 1 - 2 * (zoroToOne - 0.5f);
+                    mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                } else {
+                    zoroToOne = 2 - zoroToOne;
+                    mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                    if (zoroToOne >= 0.5f) {
+                        zoroToOne = (1.0f - zoroToOne) * 2;
+                    } else {
+                        zoroToOne = zoroToOne * 2;
+                    }
+                    mEndCirORadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
+                }
+            }
+        });
+    }
+
+    @Override
     public void drawSelf(Canvas canvas) {
 
         if (mPaint.getStyle() != Paint.Style.STROKE) {
@@ -229,6 +263,21 @@ public class SecondPellet extends Pellet {
             drawAroundPoint(canvas);
         }
 
+        if (mIsEnd) {
+            if (!mIsEndAnimStart) {
+                mEndAnimator.start();
+                mIsEndAnimStart = true;
+            }
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setColor(Config.GREEN);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirIRadius, mPaint);
+            mPaint.setColor(Config.YELLOW);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirMRadius, mPaint);
+            mPaint.setColor(Config.RED);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
+            mPaint.setStyle(Paint.Style.STROKE);
+        }
+
     }
 
     private void drawAroundLine(Canvas canvas) {
@@ -251,10 +300,5 @@ public class SecondPellet extends Pellet {
             canvas.drawCircle(getCurX(), getCurY() - MAX_RADIUS_CIRCLE / 2 - mAroundPointY, AROUND_POINT_RADIUS, mPaint);
             canvas.restore();
         }
-    }
-
-    @Override
-    public void startAnimation() {
-
     }
 }

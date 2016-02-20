@@ -1,6 +1,7 @@
 package com.tomandjerry.coolanim.lib.pellet;
 
 import android.graphics.Canvas;
+import android.util.Log;
 
 /**
  * Created by yanxing on 16/1/19.
@@ -12,7 +13,8 @@ public abstract class Pellet {
 
     private int mCurX;
     private int mCurY;
-    private int mDelayTime;
+    protected boolean mIsEnd = false;
+    protected boolean mIsEndAnimStart = true;
 
     public Pellet(int x, int y) {
         this.mCurX = x;
@@ -30,10 +32,16 @@ public abstract class Pellet {
     public Pellet prepareAnim(){
         initConfig();
         initAnim();
+        initEndAnim();
         return this;
     }
 
-    public abstract void startAnimation();
+    protected abstract void initEndAnim();
+
+    public void endAnim(){
+        mIsEnd = true;
+        mIsEndAnimStart = false;
+    };
 
     public void drawSelf(Canvas canvas){
 
@@ -48,10 +56,6 @@ public abstract class Pellet {
      */
     public void turnToText() {
 
-    }
-
-    public void setDelay(int delay) {
-        mDelayTime = delay;
     }
 
     public int getCurX() {
