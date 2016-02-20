@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 
 import com.tomandjerry.coolanim.lib.Config;
 
@@ -37,19 +38,20 @@ public class SecondPellet extends Pellet {
 
     //这个方式待修改完善。
     private int mFirYellowCirRadius;
-    private int mLineLeftOffset;//黄球左偏移
-    private int mLineRightOffset;//黄球右偏移
+    //黄球左偏移
+    private int mLineLeftOffset;
+    //黄球右偏移
+    private int mLineRightOffset;
     private int mLineStrokeWidth = 120;
 
     private boolean mIsCirLineShow = true;
-    private boolean mIsAroundPointV = false;//环绕行星可见性
-
-    private Path mPath;
+    //环绕行星可见性
+    private boolean mIsAroundPointV = false;
 
     //第二个黄色球
     private int mSecYellowCirRadius;
-    private Paint mPaint;
 
+    private Paint mPaint;
     private ValueAnimator firAnimator;
     private ValueAnimator secAnimator;
     private ValueAnimator thirdAnimator;
@@ -65,9 +67,12 @@ public class SecondPellet extends Pellet {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setAntiAlias(true);
+    }
 
+    @Override
+    protected void initAnim() {
         //黄色圆出现->黄色圆变成圆边矩形
-        firAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(1000);
+        firAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(600);
         firAnimator.setRepeatCount(0);
         firAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -106,7 +111,7 @@ public class SecondPellet extends Pellet {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float factor = (float) animation.getAnimatedValue();
                 float changeValue = 0;
-                if (factor < 1) {
+                if (factor <= 1.0f) {
                     mLineRightOffset = (int) (MOVE_MAX_LINTH * factor);
                 } else {
                     changeValue = 2 - factor;
@@ -191,8 +196,6 @@ public class SecondPellet extends Pellet {
                 firAnimator.start();
             }
         });
-
-
     }
 
     @Override
