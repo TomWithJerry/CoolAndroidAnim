@@ -5,8 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
 
 import com.tomandjerry.coolanim.lib.Config;
 
@@ -61,7 +59,7 @@ public class SecondPellet extends Pellet {
     private int mEndCirORadius;
     private ValueAnimator mEndAnimator;
     // 正在结束,只绘制结束动画
-    private boolean isEnding = false;
+    private boolean isMoveEnd = false;
 
     public SecondPellet(int x, int y) {
         super(x, y);
@@ -233,7 +231,12 @@ public class SecondPellet extends Pellet {
                     }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
-                    isEnding = true;
+                    if (!isMoveEnd) {
+                        isMoveEnd = true;
+                        if (mAnimatorStateListen != null) {
+                            mAnimatorStateListen.onMoveEnd();
+                        }
+                    }
                     zoroToOne = 2 - zoroToOne;
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                     if (zoroToOne >= 0.5f) {
@@ -249,7 +252,8 @@ public class SecondPellet extends Pellet {
 
     @Override
     public void drawSelf(Canvas canvas) {
-        if (!isEnding) {
+
+        if (!isMoveEnd) {
             if (mPaint.getStyle() != Paint.Style.STROKE) {
                 mPaint.setStyle(Paint.Style.STROKE);
             }

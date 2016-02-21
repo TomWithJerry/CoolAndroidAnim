@@ -58,7 +58,7 @@ public class FirstPellet extends Pellet {
     private int mEndCirORadius;
     private ValueAnimator mEndAnimator;
     // 正在结束,只绘制结束动画
-    private boolean isEnding = false;
+    private boolean isMoveEnd = false;
 
     public FirstPellet(int x, int y) {
         super(x, y);
@@ -97,7 +97,6 @@ public class FirstPellet extends Pellet {
                 mSecAnimator.start();
             }
         });
-//        mFirAnimator.start();
 
         //环绕行星动画
         mSecAnimator = ValueAnimator.ofFloat(0, 1).setDuration(2000);
@@ -191,7 +190,6 @@ public class FirstPellet extends Pellet {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-//                mFirAnimator.start();
 
                 if (mAnimatorStateListen != null) {
                     mAnimatorStateListen.onAnimatorEnd();
@@ -223,7 +221,12 @@ public class FirstPellet extends Pellet {
                     }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
-                    isEnding = true;
+                    if (!isMoveEnd) {
+                        isMoveEnd = true;
+                        if (mAnimatorStateListen != null) {
+                            mAnimatorStateListen.onMoveEnd();
+                        }
+                    }
                     zoroToOne = 2 - zoroToOne;
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                     if (zoroToOne >= 0.5f) {
@@ -241,7 +244,7 @@ public class FirstPellet extends Pellet {
     @Override
     public void drawSelf(Canvas canvas) {
         super.drawSelf(canvas);
-        if (!isEnding) {
+        if (!isMoveEnd) {
             //蓝色球
             mPaint.setColor(Color.BLUE);
             mPaint.setStrokeWidth(mFirCirRadius);

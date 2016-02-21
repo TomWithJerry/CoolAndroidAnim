@@ -81,11 +81,9 @@ public class PelletManager implements Pellet.AnimatorStateListen {
      */
     public void showText() {
         isEnding = true;
+        mEndNum = 0;
         for (Pellet p : mPellets) {
             p.endAnim();
-        }
-        for (Letter l : mLetters) {
-            l.startAnim();
         }
     }
 
@@ -129,6 +127,17 @@ public class PelletManager implements Pellet.AnimatorStateListen {
                 showText();
             } else {
                 startPelletsAnim();
+            }
+        }
+    }
+
+    // 在小球移动到适合的位置后,字母出现
+    @Override
+    public void onMoveEnd() {
+        mEndNum++;
+        if (mEndNum == mPellets.size()) {
+            for (Letter l : mLetters) {
+                l.startAnim();
             }
         }
     }

@@ -61,8 +61,8 @@ public class ThirdPellet extends Pellet {
     private int mEndCirMRadius;
     private int mEndCirORadius;
     private ValueAnimator mEndAnimator;
-    // 正在结束,只绘制结束动画
-    private boolean isEnding = false;
+    // 小球移动结束,只绘制结束部分
+    private boolean isMoveEnd = false;
 
     public ThirdPellet(int x, int y) {
         super(x, y);
@@ -135,7 +135,13 @@ public class ThirdPellet extends Pellet {
                     }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
-                    isEnding = true;
+                    if (!isMoveEnd) {
+                        isMoveEnd = true;
+                        if (mAnimatorStateListen != null) {
+                            mAnimatorStateListen.onMoveEnd();
+                        }
+                    }
+
                     zoroToOne = 2 - zoroToOne;
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                     if (zoroToOne >= 0.5f) {
@@ -343,7 +349,7 @@ public class ThirdPellet extends Pellet {
 
     @Override
     public void drawSelf(Canvas canvas) {
-        if (!isEnding) {
+        if (!isMoveEnd) {
             switch (mState) {
                 case 1:
                     mPaint.setStrokeWidth(mFiStrokeWidth);

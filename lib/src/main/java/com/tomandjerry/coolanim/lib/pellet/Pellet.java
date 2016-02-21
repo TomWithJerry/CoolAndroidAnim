@@ -63,10 +63,6 @@ public abstract class Pellet {
 
     };
 
-    public void moveTo(int x, int y) {
-
-    }
-
     public int getCurX() {
         return mCurX;
     }
@@ -81,5 +77,6 @@ public abstract class Pellet {
 
     public interface AnimatorStateListen {
         void onAnimatorEnd();
+        void onMoveEnd();
     }
 }
