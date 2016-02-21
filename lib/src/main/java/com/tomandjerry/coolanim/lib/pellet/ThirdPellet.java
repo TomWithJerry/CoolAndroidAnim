@@ -68,6 +68,8 @@ public class ThirdPellet extends Pellet {
 
     @Override
     protected void initConfig() {
+        mEndMovingLength = -60;
+
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
 
@@ -115,19 +117,20 @@ public class ThirdPellet extends Pellet {
 
     @Override
     protected void initEndAnim() {
-        mEndAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(3000);
-        mEndAnimator.setRepeatCount(3);
+        mEndAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(mDuration);
+//        mEndAnimator.setRepeatCount(2);
         mEndAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float zoroToOne = (float) animation.getAnimatedValue();
-                if (zoroToOne <= 0.5f) {
+                if (zoroToOne <= 1.0f) {
+                    mCurX = (int) (mPerX + zoroToOne * mEndMovingLength);
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                    zoroToOne = 2 * zoroToOne;
-                    mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                } else if (zoroToOne <= 1.0f) {
-                    mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                    zoroToOne = 1 - 2 * (zoroToOne - 0.5f);
+                    if (zoroToOne <= 0.5f) {
+                        zoroToOne = 2 * zoroToOne;
+                    } else {
+                        zoroToOne = 1 - 2 * (zoroToOne - 0.5f);
+                    }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
                     zoroToOne = 2 - zoroToOne;
@@ -145,6 +148,7 @@ public class ThirdPellet extends Pellet {
 
     /**
      * 红色弧线往内缩,绿色圆放大,回到膨胀效果
+     *
      * @return
      */
     protected ValueAnimator createBackAnim() {
@@ -189,6 +193,7 @@ public class ThirdPellet extends Pellet {
 
     /**
      * 绿色圆弧包围红色圆,内部先产生间隔,红色圆膨胀,然后绿色圆弧和红色圆膨胀效果
+     *
      * @return
      */
     protected ValueAnimator createFlattenAnim() {
@@ -257,10 +262,11 @@ public class ThirdPellet extends Pellet {
      * 黄色圆缩小,绿色弧线出现,旋转从0->-120,从-120->-320(此时小球第一次击地,红色圆弧出现),从-320->-120(红色圆弧绕圈)
      * 抛出黄色小球,绿色弧线逐渐变成球,
      * 红色弧线绕圈,逐渐合并为圆环,
+     *
      * @return
      */
     protected ValueAnimator createSmallerAndRotateAnim() {
-        mOval = new RectF(getCurX(),getCurY(),getCurX(),getCurY());
+        mOval = new RectF(getCurX(), getCurY(), getCurX(), getCurY());
         mRedOval = new RectF(getCurX() - MAX_RADIUS_CIRCLE + 5, getCurY() - MAX_RADIUS_CIRCLE + 5,
                 getCurX() + MAX_RADIUS_CIRCLE - 5, getCurY() + MAX_RADIUS_CIRCLE - 5);
         mAngle = 0;

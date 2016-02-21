@@ -46,14 +46,14 @@ public class LLetter extends Letter {
         mPaint.setStrokeWidth(mStrokeWidth);
 
 
-        mFirstPoint = new Point(x - mWidth/2 + mStrokeWidth / 2, y - mLength / 4 * 3);
+        mFirstPoint = new Point(x - mWidth / 2 + mStrokeWidth / 2, y - mLength / 4 * 3);
         mSecondPoint = new Point(mFirstPoint);
-        mThirdPoint = new Point(x - mWidth/2 + mStrokeWidth / 2, y + mLength / 4 + mStrokeWidth / 2);
+        mThirdPoint = new Point(x - mWidth / 2 + mStrokeWidth / 2, y + mLength / 4 + mStrokeWidth / 2);
     }
 
     @Override
     public void startAnim() {
-        mFirstLineAnimator = ValueAnimator.ofFloat(0, 1).setDuration(750);
+        mFirstLineAnimator = ValueAnimator.ofFloat(0, 1).setDuration(mDuration / 2);
         mFirstLineAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -69,7 +69,7 @@ public class LLetter extends Letter {
             }
         });
 
-        mSecondLineAnimator = ValueAnimator.ofFloat(0, 1).setDuration(750);
+        mSecondLineAnimator = ValueAnimator.ofFloat(0, 1).setDuration(mDuration / 2);
         mSecondLineAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

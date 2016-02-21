@@ -49,7 +49,7 @@ public class DLetter extends Letter {
 
     @Override
     public void startAnim() {
-        mAnimator = ValueAnimator.ofFloat(0, 1).setDuration(1500);
+        mAnimator = ValueAnimator.ofFloat(0, 1).setDuration(mDuration);
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

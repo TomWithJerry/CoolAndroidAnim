@@ -18,7 +18,6 @@ public class GLetter extends Letter {
     public final static int SHIFT = 60 - STROKE_WIDTH / 2;
     public final static int WIDTH = STROKE_WIDTH / 2 + 20;
     public final static int LEG_LENGTH = 120;
-    private int mDuration = 1500;
     private boolean isStart = false;
     private int mCurValue;
     private Path mPath;
