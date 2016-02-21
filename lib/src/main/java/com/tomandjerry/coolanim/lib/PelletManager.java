@@ -27,7 +27,6 @@ public class PelletManager implements Pellet.AnimatorStateListen {
 
     private List<Pellet> mPellets;
     private List<Letter> mLetters;
-    private SmallYellowBall mBall;
     private int mEndNum = 0;
     private boolean isEnding = false;
 
@@ -43,9 +42,9 @@ public class PelletManager implements Pellet.AnimatorStateListen {
     public void initComponents(int x, int y) {
         // 加入小球
         this.addPellet(new FirstPellet(x - 180, y));
+        this.addPellet(new ForthPellet(x + 180, y));
         this.addPellet(new ThirdPellet(x + 60, y));
         this.addPellet(new SecondPellet(x - 60, y));
-        this.addPellet(new ForthPellet(x + 180, y));
         // 为小球添加结束动画监听
         for (Pellet p : mPellets) {
             p.setAnimatorStateListen(this);
@@ -58,11 +57,8 @@ public class PelletManager implements Pellet.AnimatorStateListen {
         this.addLetter(new ILetter(x + 90, y));
         this.addLetter(new NLetter(x + 170, y));
         this.addLetter(new GLetter(x + 290, y));
-        // 设置小球
-        mBall = SmallYellowBall.getInstance();
 
         startPelletsAnim();
-//        showText();
     }
 
     /**
@@ -108,10 +104,13 @@ public class PelletManager implements Pellet.AnimatorStateListen {
         for (Letter l : mLetters) {
             l.drawSelf(canvas);
         }
-        if (!isEnding) {
-            // 绘制小球
-            mBall.drawSelf(canvas);
-        }
+    }
+
+    /**
+     * 使动画进入结束阶段
+     */
+    public void endAnim() {
+        isEnding = true;
     }
 
     // 循环次数

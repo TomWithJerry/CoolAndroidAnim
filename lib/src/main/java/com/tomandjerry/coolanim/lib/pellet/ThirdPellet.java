@@ -76,7 +76,7 @@ public class ThirdPellet extends Pellet {
         mPaint.setStyle(Paint.Style.STROKE);
 
         // 初始化黄色小球
-        mBall = SmallYellowBall.getInstance();
+        mBall = new SmallYellowBall();
         mFiCurR = 45;
         mFiStrokeWidth = 30;
         mSeCurR = 15;
@@ -413,5 +413,6 @@ public class ThirdPellet extends Pellet {
             return;
         }
 
+        mBall.drawSelf(canvas);
     }
 }

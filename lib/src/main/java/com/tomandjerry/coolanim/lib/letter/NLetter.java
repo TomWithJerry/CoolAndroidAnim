@@ -32,6 +32,8 @@ public class NLetter extends Letter {
     public final static int LENGTH = 120;
     // n两个脚的高度
     public final static int LEG_LENGTH = LENGTH - SHIFT - STROKE_WIDTH / 2;
+    // 判断是否进入了顶部弧线绘制
+    private boolean isInRoundDraw = false;
 
     public NLetter(int x, int y) {
         super(x, y);
@@ -65,13 +67,13 @@ public class NLetter extends Letter {
                 }
                 mCurValue = (int) animation.getAnimatedValue();
                 if (mCurValue <= mFv) {
-                    if (mCurValue <= mFv - 15) {
-                        mMoveY = mCurY - LEG_LENGTH * mCurValue / mFv;
-                        mPath.lineTo(mMoveX, mMoveY);
-                    } else {
+                    mMoveY = mCurY - LEG_LENGTH * mCurValue / mFv;
+                    mPath.lineTo(mMoveX, mMoveY);
+                } else if (mCurValue <= mSv) {
+                    if (!isInRoundDraw) {
+                        isInRoundDraw = true;
                         mPath.lineTo(mMoveX, mCurY - LEG_LENGTH);
                     }
-                } else if (mCurValue <= mSv) {
                     mCurValue -= mFv;
                     mPath.addArc(mRectF, 180, mCurValue * 180 / (mSv - mFv));
                 } else {

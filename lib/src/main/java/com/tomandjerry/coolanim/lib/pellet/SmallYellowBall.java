@@ -50,7 +50,7 @@ public class SmallYellowBall {
     private float mShift;
     private boolean isStart = false;
 
-    private SmallYellowBall() {
+    public SmallYellowBall() {
         initConfig();
     }
 
@@ -70,12 +70,12 @@ public class SmallYellowBall {
     }
 
     // 获取单实例的球
-    public synchronized static SmallYellowBall getInstance() {
-        if (mBall == null) {
-            mBall = new SmallYellowBall();
-        }
-        return mBall;
-    }
+//    public synchronized static SmallYellowBall getInstance() {
+//        if (mBall == null) {
+//            mBall = new SmallYellowBall();
+//        }
+//        return mBall;
+//    }
 
     /**
      * 分开四个段区域
