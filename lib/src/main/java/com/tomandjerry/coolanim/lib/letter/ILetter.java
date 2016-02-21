@@ -20,9 +20,9 @@ public class ILetter extends Letter {
     private boolean isStart = false;
     private Paint mPaint;
     // 竖线弹出的时间
-    private int mDuration1 = 1000;
+    private int mDuration1 = mDuration/3*2;
     // 圆球弹出的时间
-    private int mDuration2 = 500;
+    private int mDuration2 = mDuration/3;
     // 竖线变化的长度
     private float mLength1;
     // 圆球弹出的变化高度

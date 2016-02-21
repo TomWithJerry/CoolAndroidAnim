@@ -16,7 +16,6 @@ import com.tomandjerry.coolanim.lib.Config;
  * Created by yanxing on 16/2/19.
  */
 public class NLetter extends Letter {
-    private int mDuration = 1500;
     private int mFv;
     private int mSv;
     private Paint mPaint;

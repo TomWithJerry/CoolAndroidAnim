@@ -64,6 +64,8 @@ public class FirstPellet extends Pellet {
 
     @Override
     protected void initConfig() {
+        mEndMovingLength = -60;
+
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setAntiAlias(true);
@@ -203,19 +205,20 @@ public class FirstPellet extends Pellet {
 
     @Override
     public void initEndAnim() {
-        mEndAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(3000);
-        mEndAnimator.setRepeatCount(3);
+        mEndAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(mDuration);
+//        mEndAnimator.setRepeatCount(2);
         mEndAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float zoroToOne = (float) animation.getAnimatedValue();
-                if (zoroToOne <= 0.5f) {
+                if (zoroToOne <= 1.0f) {
+                    mCurX = (int) (mPerX + zoroToOne * mEndMovingLength);
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                    zoroToOne = 2 * zoroToOne;
-                    mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                } else if (zoroToOne <= 1.0f) {
-                    mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                    zoroToOne = 1 - 2 * (zoroToOne - 0.5f);
+                    if (zoroToOne <= 0.5f) {
+                        zoroToOne = 2 * zoroToOne;
+                    } else {
+                        zoroToOne = 1 - 2 * (zoroToOne - 0.5f);
+                    }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
                     zoroToOne = 2 - zoroToOne;
@@ -255,7 +258,7 @@ public class FirstPellet extends Pellet {
         //蓝色球
         mPaint.setColor(Color.BLUE);
         mPaint.setStrokeWidth(mFirCirRadius);
-        canvas.drawCircle(200, getCurY(), mFirCirRadius / 2, mPaint);
+        canvas.drawCircle(getCurX(), getCurY(), mFirCirRadius / 2, mPaint);
 
         //环绕行星
         //TODO 关系

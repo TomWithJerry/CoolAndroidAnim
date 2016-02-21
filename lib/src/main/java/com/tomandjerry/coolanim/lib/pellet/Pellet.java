@@ -11,15 +11,26 @@ public abstract class Pellet {
 
     protected static final int MAX_RADIUS_CIRCLE = 60;//暂定所有球的最大半径
 
-    private int mCurX;
-    private int mCurY;
+    protected int mCurX;
+    protected int mCurY;
+
+    //保存原始X位置
+    protected int mPerX = mCurX;
+    //是否结束
     protected boolean mIsEnd = false;
+    //是否已经启动结束动画
     protected boolean mIsEndAnimStart = true;
+    //结束时小球移动距离
+    protected int mEndMovingLength;
+    //结束动画时间长度
+    protected int mDuration = 4000;
+
     protected AnimatorStateListen mAnimatorStateListen;
 
     public Pellet(int x, int y) {
         this.mCurX = x;
         this.mCurY = y;
+        this.mPerX = x;
     }
 
     protected void initConfig(){

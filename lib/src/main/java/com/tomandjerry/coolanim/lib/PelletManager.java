@@ -31,32 +31,33 @@ public class PelletManager implements Pellet.AnimatorStateListen {
     private int mEndNum = 0;
     private boolean isEnding = false;
 
-    public PelletManager() {
+    public PelletManager(int centerX, int centerY) {
         mPellets = new ArrayList<>();
         mLetters = new ArrayList<>();
+        initComponents(centerX, centerY);
     }
 
     /**
      * 初始化各个组件,包括球和字
      */
-    public void initComponents(){
+    public void initComponents(int x, int y) {
         // 加入小球
-        this.addPellet(new FirstPellet(200, 300));
-        this.addPellet(new ThirdPellet(400, 300));
-        this.addPellet(new SecondPellet(300, 300));
-        this.addPellet(new ForthPellet(500, 300));
+        this.addPellet(new FirstPellet(x - 180, y));
+        this.addPellet(new ThirdPellet(x + 60, y));
+        this.addPellet(new SecondPellet(x - 60, y));
+        this.addPellet(new ForthPellet(x + 180, y));
         // 为小球添加结束动画监听
         for (Pellet p : mPellets) {
             p.setAnimatorStateListen(this);
         }
         // 加入字母
-        this.addLetter(new LLetter(100, 500));
-        this.addLetter(new OLetter(220, 500));
-        this.addLetter(new ALetter(340, 500));
-        this.addLetter(new DLetter(460, 500));
-        this.addLetter(new ILetter(580, 500));
-        this.addLetter(new NLetter(700, 500));
-        this.addLetter(new GLetter(820, 500));
+        this.addLetter(new LLetter(x - 360, y));
+        this.addLetter(new OLetter(x - 240, y));
+        this.addLetter(new ALetter(x - 120, y));
+        this.addLetter(new DLetter(x, y));
+        this.addLetter(new ILetter(x + 120, y));
+        this.addLetter(new NLetter(x + 240, y));
+        this.addLetter(new GLetter(x + 360, y));
         // 设置小球
         mBall = SmallYellowBall.getInstance();
 
@@ -70,7 +71,7 @@ public class PelletManager implements Pellet.AnimatorStateListen {
     public void startPelletsAnim() {
         isEnding = false;
         mEndNum = 0;
-        for (Pellet p : mPellets){
+        for (Pellet p : mPellets) {
             p.startAnim();
         }
     }
@@ -88,8 +89,8 @@ public class PelletManager implements Pellet.AnimatorStateListen {
         }
     }
 
-    public void addPellet(Pellet pellet){
-        if(pellet != null){
+    public void addPellet(Pellet pellet) {
+        if (pellet != null) {
             mPellets.add(pellet);
             pellet.prepareAnim();
         }
@@ -102,7 +103,7 @@ public class PelletManager implements Pellet.AnimatorStateListen {
     }
 
     public void drawTheWorld(Canvas canvas) {
-        for (Pellet p : mPellets){
+        for (Pellet p : mPellets) {
             p.drawSelf(canvas);
         }
 
@@ -117,6 +118,7 @@ public class PelletManager implements Pellet.AnimatorStateListen {
 
     // 循环次数
     private int times = 1;
+
     // 纪录动画结束的小球个数,当动画结束可以执行循环任务
     @Override
     public void onAnimatorEnd() {
