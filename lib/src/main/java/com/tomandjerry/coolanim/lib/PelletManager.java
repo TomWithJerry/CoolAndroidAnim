@@ -53,13 +53,13 @@ public class PelletManager implements Pellet.AnimatorStateListen {
             p.setAnimatorStateListen(this);
         }
         // 加入字母
-        this.addLetter(new LLetter(x - 360, y));
-        this.addLetter(new OLetter(x - 240, y));
-        this.addLetter(new ALetter(x - 120, y));
-        this.addLetter(new DLetter(x, y));
-        this.addLetter(new ILetter(x + 90, y));
-        this.addLetter(new NLetter(x + 170, y));
-        this.addLetter(new GLetter(x + 290, y));
+        this.addLetter(new LLetter(x - 325, y));
+        this.addLetter(new OLetter(x - 205, y));
+        this.addLetter(new ALetter(x - 85, y));
+        this.addLetter(new DLetter(x + 35, y));
+        this.addLetter(new ILetter(x + 125, y));
+        this.addLetter(new NLetter(x + 205, y));
+        this.addLetter(new GLetter(x + 325, y));
 
         startPelletsAnim();
     }

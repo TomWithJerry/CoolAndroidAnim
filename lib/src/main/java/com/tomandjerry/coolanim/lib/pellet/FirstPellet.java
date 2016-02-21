@@ -66,7 +66,7 @@ public class FirstPellet extends Pellet {
 
     @Override
     protected void initConfig() {
-        mEndMovingLength = -60;
+        mEndMovingLength = -25;
 
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.STROKE);

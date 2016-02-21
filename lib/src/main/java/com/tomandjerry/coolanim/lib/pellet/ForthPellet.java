@@ -63,7 +63,7 @@ public class ForthPellet extends Pellet {
 
     @Override
     protected void initConfig() {
-        mEndMovingLength = 290 - 180;
+        mEndMovingLength = 145;
 
         STANDARD_MIN_R = 15;
         mFiCurR = MAX_RADIUS_CIRCLE;

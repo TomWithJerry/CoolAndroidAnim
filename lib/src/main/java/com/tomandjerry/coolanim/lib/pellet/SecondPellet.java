@@ -67,7 +67,7 @@ public class SecondPellet extends Pellet {
 
     @Override
     protected void initConfig() {
-        mEndMovingLength = -60;
+        mEndMovingLength = -25;
 
         mPaint = new Paint();
         mPaint.setStrokeJoin(Paint.Join.ROUND);
