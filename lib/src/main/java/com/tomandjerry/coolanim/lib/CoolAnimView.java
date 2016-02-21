@@ -3,16 +3,10 @@ package com.tomandjerry.coolanim.lib;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
-
-import com.tomandjerry.coolanim.lib.pellet.FirstPellet;
-import com.tomandjerry.coolanim.lib.pellet.Pellet;
-import com.tomandjerry.coolanim.lib.pellet.SecondPellet;
 
 /**
  * Created by yanxing on 16/1/19.
@@ -64,7 +58,7 @@ public class CoolAnimView extends View {
     }
     public void init() {
         mPelletMng = new PelletManager();
-        mPelletMng.initPellets();
+        mPelletMng.initComponents();
 
         mAnimator = ValueAnimator.ofInt(0, 1).setDuration(16);
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);

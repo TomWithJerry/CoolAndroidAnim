@@ -15,6 +15,7 @@ public abstract class Pellet {
     private int mCurY;
     protected boolean mIsEnd = false;
     protected boolean mIsEndAnimStart = true;
+    protected AnimatorStateListen mAnimatorStateListen;
 
     public Pellet(int x, int y) {
         this.mCurX = x;
@@ -36,6 +37,10 @@ public abstract class Pellet {
         return this;
     }
 
+    public void startAnim() {
+
+    }
+
     protected abstract void initEndAnim();
 
     public void endAnim(){
@@ -51,18 +56,19 @@ public abstract class Pellet {
 
     }
 
-    /**
-     * 演变成文字
-     */
-    public void turnToText() {
-
-    }
-
     public int getCurX() {
         return mCurX;
     }
 
     public int getCurY() {
         return mCurY;
+    }
+
+    public void setAnimatorStateListen(AnimatorStateListen animatorStateListen) {
+        this.mAnimatorStateListen = animatorStateListen;
+    }
+
+    public interface AnimatorStateListen {
+        void onAnimatorEnd();
     }
 }

@@ -105,7 +105,7 @@ public class SecondPellet extends Pellet {
                 mIsCirLineShow = true;
             }
         });
-        firAnimator.start();
+//        firAnimator.start();
 
 
         secAnimator = ValueAnimator.ofFloat(0, 0.5f, 1, 1.25f, 1.5f, 1.75f, 2).setDuration(2400);
@@ -197,9 +197,18 @@ public class SecondPellet extends Pellet {
                 mAroundLineOutsideP = MAX_RADIUS_CIRCLE;
                 mLineLeftOffset = 0;
                 mLineRightOffset = 0;
-                firAnimator.start();
+//                firAnimator.start();
+
+                if (mAnimatorStateListen != null) {
+                    mAnimatorStateListen.onAnimatorEnd();
+                }
             }
         });
+    }
+
+    @Override
+    public void startAnim() {
+        firAnimator.start();
     }
 
     @Override
@@ -235,6 +244,22 @@ public class SecondPellet extends Pellet {
     @Override
     public void drawSelf(Canvas canvas) {
 
+        if (mIsEnd) {
+            if (!mIsEndAnimStart) {
+                mEndAnimator.start();
+                mIsEndAnimStart = true;
+            }
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setColor(Config.GREEN);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirIRadius, mPaint);
+            mPaint.setColor(Config.YELLOW);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirMRadius, mPaint);
+            mPaint.setColor(Config.RED);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
+            mPaint.setStyle(Paint.Style.STROKE);
+            return;
+        }
+
         if (mPaint.getStyle() != Paint.Style.STROKE) {
             mPaint.setStyle(Paint.Style.STROKE);
         }
@@ -261,21 +286,6 @@ public class SecondPellet extends Pellet {
         drawAroundLine(canvas);
         if (mIsAroundPointV == true) {
             drawAroundPoint(canvas);
-        }
-
-        if (mIsEnd) {
-            if (!mIsEndAnimStart) {
-                mEndAnimator.start();
-                mIsEndAnimStart = true;
-            }
-            mPaint.setStyle(Paint.Style.FILL);
-            mPaint.setColor(Config.GREEN);
-            canvas.drawCircle(getCurX(), getCurY(), mEndCirIRadius, mPaint);
-            mPaint.setColor(Config.YELLOW);
-            canvas.drawCircle(getCurX(), getCurY(), mEndCirMRadius, mPaint);
-            mPaint.setColor(Config.RED);
-            canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
-            mPaint.setStyle(Paint.Style.STROKE);
         }
 
     }

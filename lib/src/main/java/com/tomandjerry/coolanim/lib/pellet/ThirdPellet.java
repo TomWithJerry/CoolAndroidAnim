@@ -101,9 +101,15 @@ public class ThirdPellet extends Pellet {
         mAnimatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mAnimatorSet.start();
+                if (mAnimatorStateListen != null) {
+                    mAnimatorStateListen.onAnimatorEnd();
+                }
             }
         });
+    }
+
+    @Override
+    public void startAnim() {
         mAnimatorSet.start();
     }
 
@@ -328,6 +334,23 @@ public class ThirdPellet extends Pellet {
 
     @Override
     public void drawSelf(Canvas canvas) {
+
+        if (mIsEnd) {
+            if (!mIsEndAnimStart) {
+                mEndAnimator.start();
+                mIsEndAnimStart = true;
+            }
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setColor(Config.RED);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirIRadius, mPaint);
+            mPaint.setColor(Config.GREEN);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirMRadius, mPaint);
+            mPaint.setColor(Config.BLUE);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
+            mPaint.setStyle(Paint.Style.STROKE);
+            return;
+        }
+
         switch (mState) {
             case 1:
                 mPaint.setStrokeWidth(mFiStrokeWidth);
@@ -374,19 +397,5 @@ public class ThirdPellet extends Pellet {
                 break;
         }
 
-        if (mIsEnd) {
-            if (!mIsEndAnimStart) {
-                mEndAnimator.start();
-                mIsEndAnimStart = true;
-            }
-            mPaint.setStyle(Paint.Style.FILL);
-            mPaint.setColor(Config.RED);
-            canvas.drawCircle(getCurX(), getCurY(), mEndCirIRadius, mPaint);
-            mPaint.setColor(Config.GREEN);
-            canvas.drawCircle(getCurX(), getCurY(), mEndCirMRadius, mPaint);
-            mPaint.setColor(Config.BLUE);
-            canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
-            mPaint.setStyle(Paint.Style.STROKE);
-        }
     }
 }

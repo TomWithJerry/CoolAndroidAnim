@@ -32,7 +32,7 @@ public class NLetter extends Letter {
     public final static int WIDTH = STROKE_WIDTH / 2 + SHIFT;
     public final static int LENGTH = 120;
     // n两个脚的高度
-    public final static int LEG_LENGTH = LENGTH - SHIFT - STROKE_WIDTH;
+    public final static int LEG_LENGTH = LENGTH - SHIFT - STROKE_WIDTH / 2;
 
     public NLetter(int x, int y) {
         super(x, y);
