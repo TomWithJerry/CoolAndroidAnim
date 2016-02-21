@@ -92,7 +92,6 @@ public class ForthPellet extends Pellet {
         mAnimatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-//                mAnimatorSet.start();
                 STANDARD_MIN_R = 15;
                 mFiCurR = MAX_RADIUS_CIRCLE;
                 mFiStrokeWidth = 33;
@@ -103,7 +102,6 @@ public class ForthPellet extends Pellet {
                 }
             }
         });
-//        mAnimatorSet.start();
     }
 
     @Override
@@ -445,7 +443,7 @@ public class ForthPellet extends Pellet {
             mPaint.setColor(Config.GREEN);
             canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
             mPaint.setStyle(Paint.Style.STROKE);
-            return;
+//            return;
         }
 
         switch (mState) {
