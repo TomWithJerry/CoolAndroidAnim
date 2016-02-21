@@ -32,6 +32,8 @@ public class GLetter extends Letter {
     private int mMoveX;
     private int mMoveY;
     private int mFv;
+    // 判断是否进入了底部弧线绘制
+    private boolean isInRoundDraw = false;
 
     public GLetter(int x, int y) {
         super(x, y);
@@ -69,14 +71,14 @@ public class GLetter extends Letter {
                 mSweepAngle = mCurValue * 360 / mDuration;
                 // 计算g除了圆的J勾路线
                 if (mCurValue < mFv) {
-                    if (mCurValue < mFv - 30) {
-                        mMoveY = mCurY - SHIFT + LEG_LENGTH * mCurValue / mFv;
-                        mPath.lineTo(mMoveX, mMoveY);
-                    } else {
+                    mMoveY = mCurY - SHIFT + LEG_LENGTH * mCurValue / mFv;
+                    mPath.lineTo(mMoveX, mMoveY);
+                } else {
+                    if (!isInRoundDraw) {
+                        isInRoundDraw = true;
                         mMoveY = mCurY - SHIFT + LEG_LENGTH;
                         mPath.lineTo(mMoveX, mMoveY);
                     }
-                } else {
                     mCurValue -= mFv;
                     mSweepAngleHalf = mCurValue * 180 / (mDuration - mFv);
                     mPath.addArc(mRectFHalf, mStartAngle, mSweepAngleHalf);

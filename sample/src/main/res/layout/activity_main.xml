@@ -15,6 +15,7 @@
         android:layout_height="wrap_content" />
 
     <com.tomandjerry.coolanim.lib.CoolAnimView
+        android:id="@+id/cool_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>

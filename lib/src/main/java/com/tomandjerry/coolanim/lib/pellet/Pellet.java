@@ -78,5 +78,6 @@ public abstract class Pellet {
     public interface AnimatorStateListen {
         void onAnimatorEnd();
         void onMoveEnd();
+        void onAllAnimatorEnd();
     }
 }

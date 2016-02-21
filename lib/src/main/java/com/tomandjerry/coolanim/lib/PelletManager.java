@@ -1,6 +1,7 @@
 package com.tomandjerry.coolanim.lib;
 
 import android.graphics.Canvas;
+import android.widget.Toast;
 
 import com.tomandjerry.coolanim.lib.letter.ALetter;
 import com.tomandjerry.coolanim.lib.letter.DLetter;
@@ -27,11 +28,12 @@ public class PelletManager implements Pellet.AnimatorStateListen {
 
     private List<Pellet> mPellets;
     private List<Letter> mLetters;
-    private SmallYellowBall mBall;
     private int mEndNum = 0;
     private boolean isEnding = false;
+    private CoolAnimView mView;
 
-    public PelletManager(int centerX, int centerY) {
+    public PelletManager(CoolAnimView view, int centerX, int centerY) {
+        mView = view;
         mPellets = new ArrayList<>();
         mLetters = new ArrayList<>();
         initComponents(centerX, centerY);
@@ -43,9 +45,9 @@ public class PelletManager implements Pellet.AnimatorStateListen {
     public void initComponents(int x, int y) {
         // 加入小球
         this.addPellet(new FirstPellet(x - 180, y));
+        this.addPellet(new ForthPellet(x + 180, y));
         this.addPellet(new ThirdPellet(x + 60, y));
         this.addPellet(new SecondPellet(x - 60, y));
-        this.addPellet(new ForthPellet(x + 180, y));
         // 为小球添加结束动画监听
         for (Pellet p : mPellets) {
             p.setAnimatorStateListen(this);
@@ -58,11 +60,8 @@ public class PelletManager implements Pellet.AnimatorStateListen {
         this.addLetter(new ILetter(x + 90, y));
         this.addLetter(new NLetter(x + 170, y));
         this.addLetter(new GLetter(x + 290, y));
-        // 设置小球
-        mBall = SmallYellowBall.getInstance();
 
         startPelletsAnim();
-//        showText();
     }
 
     /**
@@ -108,22 +107,18 @@ public class PelletManager implements Pellet.AnimatorStateListen {
         for (Letter l : mLetters) {
             l.drawSelf(canvas);
         }
-        if (!isEnding) {
-            // 绘制小球
-            mBall.drawSelf(canvas);
-        }
     }
 
-    // 循环次数
-    private int times = 1;
+    public void endAnim() {
+        isEnding = true;
+    }
 
     // 纪录动画结束的小球个数,当动画结束可以执行循环任务
     @Override
     public void onAnimatorEnd() {
         mEndNum++;
         if (mEndNum == mPellets.size()) {
-            times--;
-            if (times == 0) {
+            if (isEnding) {
                 showText();
             } else {
                 startPelletsAnim();
@@ -140,5 +135,13 @@ public class PelletManager implements Pellet.AnimatorStateListen {
                 l.startAnim();
             }
         }
+    }
+
+    /**
+     * 由第一个小球传达结束动画消息到manager中
+     */
+    @Override
+    public void onAllAnimatorEnd() {
+        mView.onAnimEnd();
     }
 }

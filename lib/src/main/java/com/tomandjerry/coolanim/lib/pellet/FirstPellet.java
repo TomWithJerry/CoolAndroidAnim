@@ -238,6 +238,14 @@ public class FirstPellet extends Pellet {
                 }
             }
         });
+        mEndAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (mAnimatorStateListen != null) {
+                    mAnimatorStateListen.onAllAnimatorEnd();
+                }
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
