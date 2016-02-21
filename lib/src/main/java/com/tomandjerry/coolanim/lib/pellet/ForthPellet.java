@@ -92,14 +92,22 @@ public class ForthPellet extends Pellet {
         mAnimatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mAnimatorSet.start();
+//                mAnimatorSet.start();
                 STANDARD_MIN_R = 15;
                 mFiCurR = MAX_RADIUS_CIRCLE;
                 mFiStrokeWidth = 33;
                 mSeCurR = 0;
                 mSeStrokeWidth = mSeCurR;
+                if (mAnimatorStateListen != null) {
+                    mAnimatorStateListen.onAnimatorEnd();
+                }
             }
         });
+//        mAnimatorSet.start();
+    }
+
+    @Override
+    public void startAnim() {
         mAnimatorSet.start();
     }
 
@@ -336,9 +344,9 @@ public class ForthPellet extends Pellet {
                     mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth / 2, colors1, positions1, Shader.TileMode.CLAMP);
                 } else {
                     positions2[5] = 1;
-                    positions2[4] = (mCurValue - 200) / 100f;
+                    positions2[4] = (mCurValue - 200) / 200f + 0.5f;
                     positions2[3] = positions2[4];
-                    positions2[2] = positions2[3] - 0.1f;
+                    positions2[2] = positions2[3] - 0.2f;
                     positions2[1] = positions2[2];
                     positions2[0] = 0;
                     mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth / 2, colors2, positions2, Shader.TileMode.CLAMP);
@@ -423,6 +431,23 @@ public class ForthPellet extends Pellet {
 
     @Override
     public void drawSelf(Canvas canvas) {
+
+        if (mIsEnd) {
+            if (!mIsEndAnimStart) {
+                mEndAnimator.start();
+                mIsEndAnimStart = true;
+            }
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setColor(Config.YELLOW);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirIRadius, mPaint);
+            mPaint.setColor(Config.BLUE);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirMRadius, mPaint);
+            mPaint.setColor(Config.GREEN);
+            canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
+            mPaint.setStyle(Paint.Style.STROKE);
+            return;
+        }
+
         switch (mState) {
             case 1:
                 // 绘制黄色圆环或圆
@@ -465,19 +490,5 @@ public class ForthPellet extends Pellet {
                 break;
         }
 
-        if (mIsEnd) {
-            if (!mIsEndAnimStart) {
-                mEndAnimator.start();
-                mIsEndAnimStart = true;
-            }
-            mPaint.setStyle(Paint.Style.FILL);
-            mPaint.setColor(Config.YELLOW);
-            canvas.drawCircle(getCurX(), getCurY(), mEndCirIRadius, mPaint);
-            mPaint.setColor(Config.BLUE);
-            canvas.drawCircle(getCurX(), getCurY(), mEndCirMRadius, mPaint);
-            mPaint.setColor(Config.GREEN);
-            canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
-            mPaint.setStyle(Paint.Style.STROKE);
-        }
     }
 }
