@@ -57,6 +57,8 @@ public class FirstPellet extends Pellet {
     private int mEndCirMRadius;
     private int mEndCirORadius;
     private ValueAnimator mEndAnimator;
+    // 正在结束,只绘制结束动画
+    private boolean isEnding = false;
 
     public FirstPellet(int x, int y) {
         super(x, y);
@@ -221,6 +223,7 @@ public class FirstPellet extends Pellet {
                     }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
+                    isEnding = true;
                     zoroToOne = 2 - zoroToOne;
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                     if (zoroToOne >= 0.5f) {
@@ -238,6 +241,38 @@ public class FirstPellet extends Pellet {
     @Override
     public void drawSelf(Canvas canvas) {
         super.drawSelf(canvas);
+        if (!isEnding) {
+            //蓝色球
+            mPaint.setColor(Color.BLUE);
+            mPaint.setStrokeWidth(mFirCirRadius);
+            canvas.drawCircle(getCurX(), getCurY(), mFirCirRadius / 2, mPaint);
+
+            //环绕行星
+            //TODO 关系
+            mPaint.setColor(Config.GREEN);
+            for (int i = 0; i < 10; i++) {
+                canvas.save();
+                mPaint.setStrokeWidth(mSecCirRadius);
+                canvas.rotate(90 + i * DIVIDE_DEGREES + mAroundCirDegrees, getCurX(), getCurY());
+                canvas.drawCircle(getCurX(), getCurY() - 60, mSecCirRadius / 2, mPaint);
+                canvas.restore();
+            }
+
+            //环绕结束,黄色球包围
+            mPaint.setColor(Config.YELLOW);
+            mPaint.setStrokeWidth(mThiCirStrokeWidth);
+            canvas.drawCircle(getCurX(), getCurY(), mThiCirRadius / 2, mPaint);
+
+
+            //扇形弧线
+            mPaint.setColor(Color.BLUE);
+            mPaint.setStrokeWidth(20);
+            canvas.drawArc(mRectF, mAroundArcDegrees, mAroundArcLength, false, mPaint);
+
+            mPaint.setColor(Color.BLUE);
+            mPaint.setStrokeWidth(mPreFirCirRadius);
+            canvas.drawCircle(getCurX(), getCurY(), mPreFirCirRadius / 2, mPaint);
+        }
 
         if (mIsEnd) {
             if (!mIsEndAnimStart) {
@@ -254,37 +289,6 @@ public class FirstPellet extends Pellet {
             mPaint.setStyle(Paint.Style.STROKE);
             return;
         }
-
-        //蓝色球
-        mPaint.setColor(Color.BLUE);
-        mPaint.setStrokeWidth(mFirCirRadius);
-        canvas.drawCircle(getCurX(), getCurY(), mFirCirRadius / 2, mPaint);
-
-        //环绕行星
-        //TODO 关系
-        mPaint.setColor(Config.GREEN);
-        for (int i = 0; i < 10; i++) {
-            canvas.save();
-            mPaint.setStrokeWidth(mSecCirRadius);
-            canvas.rotate(90 + i * DIVIDE_DEGREES + mAroundCirDegrees, getCurX(), getCurY());
-            canvas.drawCircle(getCurX(), getCurY() - 60, mSecCirRadius / 2, mPaint);
-            canvas.restore();
-        }
-
-        //环绕结束,黄色球包围
-        mPaint.setColor(Config.YELLOW);
-        mPaint.setStrokeWidth(mThiCirStrokeWidth);
-        canvas.drawCircle(getCurX(), getCurY(), mThiCirRadius / 2, mPaint);
-
-
-        //扇形弧线
-        mPaint.setColor(Color.BLUE);
-        mPaint.setStrokeWidth(20);
-        canvas.drawArc(mRectF, mAroundArcDegrees, mAroundArcLength, false, mPaint);
-
-        mPaint.setColor(Color.BLUE);
-        mPaint.setStrokeWidth(mPreFirCirRadius);
-        canvas.drawCircle(getCurX(), getCurY(), mPreFirCirRadius / 2, mPaint);
 
     }
 }

@@ -54,6 +54,8 @@ public class ForthPellet extends Pellet {
     private int mEndCirMRadius;
     private int mEndCirORadius;
     private ValueAnimator mEndAnimator;
+    // 正在结束,只绘制结束动画
+    private boolean isEnding = false;
 
     public ForthPellet(int x, int y) {
         super(x, y);
@@ -61,7 +63,7 @@ public class ForthPellet extends Pellet {
 
     @Override
     protected void initConfig() {
-        mEndMovingLength = 360 - 180;
+        mEndMovingLength = 290 - 180;
 
         STANDARD_MIN_R = 15;
         mFiCurR = MAX_RADIUS_CIRCLE;
@@ -129,6 +131,7 @@ public class ForthPellet extends Pellet {
                     }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
+                    isEnding = true;
                     zoroToOne = 2 - zoroToOne;
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                     if (zoroToOne >= 0.5f) {
@@ -434,6 +437,50 @@ public class ForthPellet extends Pellet {
     @Override
     public void drawSelf(Canvas canvas) {
 
+        if (!isEnding) {
+            switch (mState) {
+                case 1:
+                    // 绘制黄色圆环或圆
+                    mPaint.setStrokeWidth(mFiStrokeWidth);
+                    mPaint.setColor(Config.YELLOW);
+                    canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
+                    // 绘制绿色圆环
+                    mPaint.setStrokeWidth(mSeStrokeWidth);
+                    mPaint.setColor(Config.GREEN);
+                    canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
+                    break;
+                case 2:
+
+                    // 绘制蓝色弧线
+                    canvas.save();
+                    canvas.rotate(mAngle - 90, getCurX(), getCurY());
+                    mPaint.setShader(mSweepGradient);
+                    canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
+                    canvas.restore();
+
+                    // 绘制黄色弧线
+                    mPaint.setShader(null);
+                    mPaint.setStrokeWidth(mFiStrokeWidth);
+                    mPaint.setColor(Config.YELLOW);
+                    canvas.drawArc(mRectF, mAngle - 90, mSweepAngle, false, mPaint);
+
+                    // 绘制绿色圆环
+                    mPaint.setStrokeWidth(mSeStrokeWidth);
+                    mPaint.setColor(Config.GREEN);
+                    canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
+                    break;
+                case 3:
+                    // 绘制绿色圆环
+                    mPaint.setStrokeWidth(mSeStrokeWidth);
+                    mPaint.setShader(mRadialGradient);
+                    canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
+                    mPaint.setShader(null);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         if (mIsEnd) {
             if (!mIsEndAnimStart) {
                 mEndAnimator.start();
@@ -447,50 +494,7 @@ public class ForthPellet extends Pellet {
             mPaint.setColor(Config.GREEN);
             canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
             mPaint.setStyle(Paint.Style.STROKE);
-//            return;
+            return;
         }
-
-        switch (mState) {
-            case 1:
-                // 绘制黄色圆环或圆
-                mPaint.setStrokeWidth(mFiStrokeWidth);
-                mPaint.setColor(Config.YELLOW);
-                canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
-                // 绘制绿色圆环
-                mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(Config.GREEN);
-                canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
-                break;
-            case 2:
-
-                // 绘制蓝色弧线
-                canvas.save();
-                canvas.rotate(mAngle - 90, getCurX(), getCurY());
-                mPaint.setShader(mSweepGradient);
-                canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
-                canvas.restore();
-
-                // 绘制黄色弧线
-                mPaint.setShader(null);
-                mPaint.setStrokeWidth(mFiStrokeWidth);
-                mPaint.setColor(Config.YELLOW);
-                canvas.drawArc(mRectF, mAngle - 90, mSweepAngle, false, mPaint);
-
-                // 绘制绿色圆环
-                mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(Config.GREEN);
-                canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
-                break;
-            case 3:
-                // 绘制绿色圆环
-                mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setShader(mRadialGradient);
-                canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
-                mPaint.setShader(null);
-                break;
-            default:
-                break;
-        }
-
     }
 }

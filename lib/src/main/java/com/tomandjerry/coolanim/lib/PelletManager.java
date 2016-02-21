@@ -55,9 +55,9 @@ public class PelletManager implements Pellet.AnimatorStateListen {
         this.addLetter(new OLetter(x - 240, y));
         this.addLetter(new ALetter(x - 120, y));
         this.addLetter(new DLetter(x, y));
-        this.addLetter(new ILetter(x + 120, y));
-        this.addLetter(new NLetter(x + 240, y));
-        this.addLetter(new GLetter(x + 360, y));
+        this.addLetter(new ILetter(x + 90, y));
+        this.addLetter(new NLetter(x + 170, y));
+        this.addLetter(new GLetter(x + 290, y));
         // 设置小球
         mBall = SmallYellowBall.getInstance();
 
