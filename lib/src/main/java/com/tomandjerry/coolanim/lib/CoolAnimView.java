@@ -83,10 +83,6 @@ public class CoolAnimView extends View {
         mAnimator.start();
     }
 
-//    public void stopAnim() {
-//        mPelletMng.endAnim();
-//    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

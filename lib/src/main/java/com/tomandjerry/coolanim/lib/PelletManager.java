@@ -106,13 +106,6 @@ public class PelletManager implements Pellet.AnimatorStateListen {
         }
     }
 
-    /**
-     * 使动画进入结束阶段
-     */
-    public void endAnim() {
-        isEnding = true;
-    }
-
     // 循环次数
     private int times = 1;
 
