@@ -37,7 +37,7 @@ layout.addView(new CoolAnimView(MainActivity.this), params);
 ![](https://github.com/TomWithJerry/CoolAndroidAnim/raw/master/struc.jpeg)
 
 # 作者
-@Yellow5A5,@yxping
+[@Yellow5A5](https://github.com/Yellow5A5),[@yxping](https://github.com/yxping)
 
 # TODO
 该库还未提供自由更改大小的能力
