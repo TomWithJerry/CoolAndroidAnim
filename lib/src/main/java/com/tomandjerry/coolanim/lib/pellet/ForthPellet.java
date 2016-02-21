@@ -61,6 +61,8 @@ public class ForthPellet extends Pellet {
 
     @Override
     protected void initConfig() {
+        mEndMovingLength = 360 - 180;
+
         STANDARD_MIN_R = 15;
         mFiCurR = MAX_RADIUS_CIRCLE;
         mFiStrokeWidth = 33;
@@ -113,19 +115,20 @@ public class ForthPellet extends Pellet {
 
     @Override
     protected void initEndAnim() {
-        mEndAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(3000);
-        mEndAnimator.setRepeatCount(3);
+        mEndAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(mDuration);
+//        mEndAnimator.setRepeatCount(2);
         mEndAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float zoroToOne = (float) animation.getAnimatedValue();
-                if (zoroToOne <= 0.5f) {
+                if (zoroToOne <= 1.0f) {
+                    mCurX = (int) (mPerX + zoroToOne * mEndMovingLength);
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                    zoroToOne = 2 * zoroToOne;
-                    mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                } else if (zoroToOne <= 1.0f) {
-                    mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                    zoroToOne = 1 - 2 * (zoroToOne - 0.5f);
+                    if (zoroToOne <= 0.5f) {
+                        zoroToOne = 2 * zoroToOne;
+                    } else {
+                        zoroToOne = 1 - 2 * (zoroToOne - 0.5f);
+                    }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
                     zoroToOne = 2 - zoroToOne;
@@ -354,38 +357,39 @@ public class ForthPellet extends Pellet {
             }
         });
         animator.addListener(new
-                         AnimatorListenerAdapter() {
-                             @Override
-                             public void onAnimationStart(Animator animation) {
-                                 mState = 3;
-                                 isStart = true;
-                                 mCurValue = 0;
-                                 mPreValue = 0;
-                                 positions1[1] = 0f;
-                                 positions1[0] = 0f;
-                                 positions2[5] = 0f;
-                                 positions2[4] = 0f;
-                                 positions2[3] = 0f;
-                                 positions2[2] = 0f;
-                                 positions2[1] = 0f;
-                                 positions2[0] = 0f;
-                                 colors1[0] = Config.YELLOW;
-                                 colors1[1] = Config.YELLOW;
-                                 colors1[2] = Config.GREEN;
-                                 colors1[3] = Config.GREEN;
-                                 mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth, colors1, positions1, Shader.TileMode.CLAMP);
-                             }
+                                     AnimatorListenerAdapter() {
+                                         @Override
+                                         public void onAnimationStart(Animator animation) {
+                                             mState = 3;
+                                             isStart = true;
+                                             mCurValue = 0;
+                                             mPreValue = 0;
+                                             positions1[1] = 0f;
+                                             positions1[0] = 0f;
+                                             positions2[5] = 0f;
+                                             positions2[4] = 0f;
+                                             positions2[3] = 0f;
+                                             positions2[2] = 0f;
+                                             positions2[1] = 0f;
+                                             positions2[0] = 0f;
+                                             colors1[0] = Config.YELLOW;
+                                             colors1[1] = Config.YELLOW;
+                                             colors1[2] = Config.GREEN;
+                                             colors1[3] = Config.GREEN;
+                                             mRadialGradient = new RadialGradient(getCurX(), getCurY(), mSeCurR + mSeStrokeWidth, colors1, positions1, Shader.TileMode.CLAMP);
+                                         }
 
-                             @Override
-                             public void onAnimationEnd(Animator animation) {
-                                 isStart = false;
-                             }
-                         });
+                                         @Override
+                                         public void onAnimationEnd(Animator animation) {
+                                             isStart = false;
+                                         }
+                                     });
         return animator;
     }
 
     /**
      * 过度动画,使弧线宽度回到初始值
+     *
      * @return
      */
     protected ValueAnimator createPassAnim() {
@@ -407,25 +411,25 @@ public class ForthPellet extends Pellet {
             }
         });
         animator.addListener(new AnimatorListenerAdapter() {
-                 @Override
-                 public void onAnimationStart(Animator animation) {
-                     mState = 1;
-                     isStart = true;
-                     mCurValue = 0;
-                     mPreValue = 0;
-                     mFiCurR = mSeCurR;
-                     mFiStrokeWidth = mSeStrokeWidth;
-                     gap[0] = (MAX_RADIUS_CIRCLE - mFiCurR) / 1000;
-                     gap[1] = (33 - mFiStrokeWidth) / 1000;
-                     mSeCurR = 0;
-                     mSeStrokeWidth = 0;
-                 }
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mState = 1;
+                isStart = true;
+                mCurValue = 0;
+                mPreValue = 0;
+                mFiCurR = mSeCurR;
+                mFiStrokeWidth = mSeStrokeWidth;
+                gap[0] = (MAX_RADIUS_CIRCLE - mFiCurR) / 1000;
+                gap[1] = (33 - mFiStrokeWidth) / 1000;
+                mSeCurR = 0;
+                mSeStrokeWidth = 0;
+            }
 
-                 @Override
-                 public void onAnimationEnd(Animator animation) {
-                     isStart = false;
-                 }
-             });
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isStart = false;
+            }
+        });
         return animator;
     }
 

@@ -9,6 +9,7 @@ public abstract class Letter {
 
     protected int mCurX;
     protected int mCurY;
+    protected int mDuration = 2000;
 
     public Letter(int x, int y) {
         mCurX = x;

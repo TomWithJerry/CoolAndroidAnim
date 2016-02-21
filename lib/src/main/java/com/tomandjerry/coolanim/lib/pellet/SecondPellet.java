@@ -16,7 +16,7 @@ import com.tomandjerry.coolanim.lib.Config;
 public class SecondPellet extends Pellet {
 
     //移动长度
-    private final int MOVE_MAX_LINTH = 100;
+    private final int MOVE_MAX_LINTH = 120;
     //环绕线粗，应为AROUND_POINT_RADIUS*2;
     private final int LINE_STROKE_LENGTH = 8;
     //环绕行星(圆)半径
@@ -67,6 +67,8 @@ public class SecondPellet extends Pellet {
 
     @Override
     protected void initConfig() {
+        mEndMovingLength = -60;
+
         mPaint = new Paint();
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -213,19 +215,20 @@ public class SecondPellet extends Pellet {
 
     @Override
     protected void initEndAnim() {
-        mEndAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(3000);
-        mEndAnimator.setRepeatCount(3);
+        mEndAnimator = ValueAnimator.ofFloat(0, 1, 2).setDuration(mDuration);
+//        mEndAnimator.setRepeatCount(2);
         mEndAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float zoroToOne = (float) animation.getAnimatedValue();
-                if (zoroToOne <= 0.5f) {
+                if (zoroToOne <= 1.0f) {
+                    mCurX = (int) (mPerX + zoroToOne * mEndMovingLength);
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                    zoroToOne = 2 * zoroToOne;
-                    mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                } else if (zoroToOne <= 1.0f) {
-                    mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
-                    zoroToOne = 1 - 2 * (zoroToOne - 0.5f);
+                    if (zoroToOne <= 0.5f) {
+                        zoroToOne = 2 * zoroToOne;
+                    } else {
+                        zoroToOne = 1 - 2 * (zoroToOne - 0.5f);
+                    }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
                     zoroToOne = 2 - zoroToOne;

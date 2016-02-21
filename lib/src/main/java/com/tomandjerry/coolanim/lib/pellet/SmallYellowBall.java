@@ -58,7 +58,7 @@ public class SmallYellowBall {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(Config.YELLOW);
         mRadius = 15;
-        mDistance = 100;
+        mDistance = 120;
         mDuration = 2000;
         mSpeedX = mDistance / mDuration;
         mFiRate = HEIGHT * 4 / mDuration;

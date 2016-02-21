@@ -30,15 +30,15 @@ public class OLetter extends Letter {
 
     @Override
     public void startAnim() {
-        mCirAnimator = ValueAnimator.ofFloat(0, 1).setDuration(1500);
+        mCirAnimator = ValueAnimator.ofFloat(0, 1).setDuration(mDuration);
         mCirAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float factor = (float) animation.getAnimatedValue();
-                if(factor < 0.5f) {
+                if (factor < 0.5f) {
                     mStartAngle = (int) (90 * factor);
                     mSweepAngle = (int) (180 * factor);
-                }else{
+                } else {
                     float zoroToOne = (float) ((factor - 0.5) * 2);
                     mStartAngle = (int) (45 + 135 * zoroToOne);
                     mSweepAngle = (int) (90 + 270 * zoroToOne);

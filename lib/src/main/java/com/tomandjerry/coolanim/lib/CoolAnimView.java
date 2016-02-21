@@ -15,6 +15,13 @@ public class CoolAnimView extends View {
     public final static int WIDTH_DEFAULT = 300;
     public final static int HEIGHT_DEFAULT = 300;
 
+    private int mWidth;
+    private int mHeight;
+
+    private int mCenterX;
+    private int mCenterY;
+
+
     private PelletManager mPelletMng;
     private ValueAnimator mAnimator;
 
@@ -57,8 +64,13 @@ public class CoolAnimView extends View {
         return result;
     }
     public void init() {
-        mPelletMng = new PelletManager();
-        mPelletMng.initComponents();
+        mWidth = getMeasuredWidth();
+        mHeight = getMeasuredHeight();
+
+        mCenterX = (int) (getX() + mWidth/2);
+        mCenterY = (int) (getY() + mHeight/2);
+
+        mPelletMng = new PelletManager(mCenterX, mCenterY);
 
         mAnimator = ValueAnimator.ofInt(0, 1).setDuration(16);
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
