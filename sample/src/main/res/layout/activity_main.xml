@@ -7,6 +7,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin" >
 
+    <Button
+        android:id="@+id/btn_dialog"
+        android:text="@string/btn_show_dialog"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.tomandjerry.coolanim.lib.CoolAnimView
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
