@@ -70,7 +70,7 @@ public class ThirdPellet extends Pellet {
 
     @Override
     protected void initConfig() {
-        mEndMovingLength = -60;
+        mEndMovingLength = -25;
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
