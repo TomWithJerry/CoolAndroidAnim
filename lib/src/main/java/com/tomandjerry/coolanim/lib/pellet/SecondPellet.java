@@ -5,8 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
 
 import com.tomandjerry.coolanim.lib.Config;
 
@@ -60,6 +58,8 @@ public class SecondPellet extends Pellet {
     private int mEndCirMRadius;
     private int mEndCirORadius;
     private ValueAnimator mEndAnimator;
+    // 正在结束,只绘制结束动画
+    private boolean isMoveEnd = false;
 
     public SecondPellet(int x, int y) {
         super(x, y);
@@ -231,6 +231,12 @@ public class SecondPellet extends Pellet {
                     }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
+                    if (!isMoveEnd) {
+                        isMoveEnd = true;
+                        if (mAnimatorStateListen != null) {
+                            mAnimatorStateListen.onMoveEnd();
+                        }
+                    }
                     zoroToOne = 2 - zoroToOne;
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                     if (zoroToOne >= 0.5f) {
@@ -247,6 +253,36 @@ public class SecondPellet extends Pellet {
     @Override
     public void drawSelf(Canvas canvas) {
 
+        if (!isMoveEnd) {
+            if (mPaint.getStyle() != Paint.Style.STROKE) {
+                mPaint.setStyle(Paint.Style.STROKE);
+            }
+            mPaint.setColor(Config.YELLOW);
+            mPaint.setStrokeWidth(mSecYellowCirRadius);
+            canvas.drawCircle(getCurX(), getCurY(), mSecYellowCirRadius / 2, mPaint);
+
+            mPaint.setColor(Config.RED);
+            mPaint.setStrokeWidth(mRedCirStrokeFactor);
+            canvas.drawCircle(getCurX(), getCurY(), mRedCirCleRadius - mRedCirStrokeFactor / 2, mPaint);
+
+            mPaint.setColor(Config.YELLOW);
+            mPaint.setStrokeWidth(mFirYellowCirRadius);
+            canvas.drawCircle(getCurX(), getCurY(), mFirYellowCirRadius / 2, mPaint);
+
+
+            //黄色圆移动，等同圆角的线
+            //TODO 结尾问题。
+            if (mIsCirLineShow) {
+                mPaint.setStrokeWidth(mLineStrokeWidth);
+                canvas.drawLine(getCurX() + mLineRightOffset, getCurY(), getCurX() + mLineLeftOffset, getCurY(), mPaint);
+            }
+
+            drawAroundLine(canvas);
+            if (mIsAroundPointV == true) {
+                drawAroundPoint(canvas);
+            }
+        }
+
         if (mIsEnd) {
             if (!mIsEndAnimStart) {
                 mEndAnimator.start();
@@ -261,34 +297,6 @@ public class SecondPellet extends Pellet {
             canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
             mPaint.setStyle(Paint.Style.STROKE);
             return;
-        }
-
-        if (mPaint.getStyle() != Paint.Style.STROKE) {
-            mPaint.setStyle(Paint.Style.STROKE);
-        }
-        mPaint.setColor(Config.YELLOW);
-        mPaint.setStrokeWidth(mSecYellowCirRadius);
-        canvas.drawCircle(getCurX(), getCurY(), mSecYellowCirRadius / 2, mPaint);
-
-        mPaint.setColor(Config.RED);
-        mPaint.setStrokeWidth(mRedCirStrokeFactor);
-        canvas.drawCircle(getCurX(), getCurY(), mRedCirCleRadius - mRedCirStrokeFactor / 2, mPaint);
-
-        mPaint.setColor(Config.YELLOW);
-        mPaint.setStrokeWidth(mFirYellowCirRadius);
-        canvas.drawCircle(getCurX(), getCurY(), mFirYellowCirRadius / 2, mPaint);
-
-
-        //黄色圆移动，等同圆角的线
-        //TODO 结尾问题。
-        if (mIsCirLineShow) {
-            mPaint.setStrokeWidth(mLineStrokeWidth);
-            canvas.drawLine(getCurX() + mLineRightOffset, getCurY(), getCurX() + mLineLeftOffset, getCurY(), mPaint);
-        }
-
-        drawAroundLine(canvas);
-        if (mIsAroundPointV == true) {
-            drawAroundPoint(canvas);
         }
 
     }

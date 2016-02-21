@@ -55,9 +55,9 @@ public class PelletManager implements Pellet.AnimatorStateListen {
         this.addLetter(new OLetter(x - 240, y));
         this.addLetter(new ALetter(x - 120, y));
         this.addLetter(new DLetter(x, y));
-        this.addLetter(new ILetter(x + 120, y));
-        this.addLetter(new NLetter(x + 240, y));
-        this.addLetter(new GLetter(x + 360, y));
+        this.addLetter(new ILetter(x + 90, y));
+        this.addLetter(new NLetter(x + 170, y));
+        this.addLetter(new GLetter(x + 290, y));
         // 设置小球
         mBall = SmallYellowBall.getInstance();
 
@@ -81,11 +81,9 @@ public class PelletManager implements Pellet.AnimatorStateListen {
      */
     public void showText() {
         isEnding = true;
+        mEndNum = 0;
         for (Pellet p : mPellets) {
             p.endAnim();
-        }
-        for (Letter l : mLetters) {
-            l.startAnim();
         }
     }
 
@@ -129,6 +127,17 @@ public class PelletManager implements Pellet.AnimatorStateListen {
                 showText();
             } else {
                 startPelletsAnim();
+            }
+        }
+    }
+
+    // 在小球移动到适合的位置后,字母出现
+    @Override
+    public void onMoveEnd() {
+        mEndNum++;
+        if (mEndNum == mPellets.size()) {
+            for (Letter l : mLetters) {
+                l.startAnim();
             }
         }
     }

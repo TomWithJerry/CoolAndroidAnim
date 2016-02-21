@@ -61,6 +61,8 @@ public class ThirdPellet extends Pellet {
     private int mEndCirMRadius;
     private int mEndCirORadius;
     private ValueAnimator mEndAnimator;
+    // 小球移动结束,只绘制结束部分
+    private boolean isMoveEnd = false;
 
     public ThirdPellet(int x, int y) {
         super(x, y);
@@ -133,6 +135,13 @@ public class ThirdPellet extends Pellet {
                     }
                     mEndCirMRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                 } else {
+                    if (!isMoveEnd) {
+                        isMoveEnd = true;
+                        if (mAnimatorStateListen != null) {
+                            mAnimatorStateListen.onMoveEnd();
+                        }
+                    }
+
                     zoroToOne = 2 - zoroToOne;
                     mEndCirIRadius = (int) (MAX_RADIUS_CIRCLE * zoroToOne);
                     if (zoroToOne >= 0.5f) {
@@ -340,6 +349,53 @@ public class ThirdPellet extends Pellet {
 
     @Override
     public void drawSelf(Canvas canvas) {
+        if (!isMoveEnd) {
+            switch (mState) {
+                case 1:
+                    mPaint.setStrokeWidth(mFiStrokeWidth);
+                    mPaint.setColor(Config.GREEN);
+                    canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
+
+                    mPaint.setStrokeWidth(mSeStrokeWidth);
+                    mPaint.setColor(Color.RED);
+                    canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
+                    break;
+                case 2:
+                    mPaint.setColor(Config.GREEN);
+                    mPaint.setStrokeWidth(mFiStrokeWidth);
+                    canvas.drawArc(mOval, mAngle, GAP_ANGLE, false, mPaint);
+
+                    mPaint.setStrokeWidth(mSeStrokeWidth);
+                    mPaint.setColor(Config.YELLOW);
+                    canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
+                    break;
+                case 3:
+                    // 绘制红色弧线
+                    mPaint.setStrokeWidth(mSeStrokeWidth);
+                    mPaint.setColor(Config.RED);
+                    canvas.drawArc(mRedOval, mRedAngle, mGapRedAngle, false, mPaint);
+
+                    mPaint.setColor(Config.GREEN);
+                    mPaint.setStrokeWidth(mFiStrokeWidth);
+                    canvas.drawArc(mOval, mAngle, mGapGreenAngle, false, mPaint);
+
+                    break;
+                case 4:
+                    // 绘制绿色圆
+                    mPaint.setStrokeWidth(mSeStrokeWidth);
+                    mPaint.setColor(Config.GREEN);
+                    canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
+
+                    // 绘制红色圆弧
+                    mPaint.setStrokeWidth(mFiStrokeWidth);
+                    mPaint.setColor(Config.RED);
+                    canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
+
+                    break;
+                default:
+                    break;
+            }
+        }
 
         if (mIsEnd) {
             if (!mIsEndAnimStart) {
@@ -355,52 +411,6 @@ public class ThirdPellet extends Pellet {
             canvas.drawCircle(getCurX(), getCurY(), mEndCirORadius, mPaint);
             mPaint.setStyle(Paint.Style.STROKE);
             return;
-        }
-
-        switch (mState) {
-            case 1:
-                mPaint.setStrokeWidth(mFiStrokeWidth);
-                mPaint.setColor(Config.GREEN);
-                canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
-
-                mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(Color.RED);
-                canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
-                break;
-            case 2:
-                mPaint.setColor(Config.GREEN);
-                mPaint.setStrokeWidth(mFiStrokeWidth);
-                canvas.drawArc(mOval, mAngle, GAP_ANGLE, false, mPaint);
-
-                mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(Config.YELLOW);
-                canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
-                break;
-            case 3:
-                // 绘制红色弧线
-                mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(Config.RED);
-                canvas.drawArc(mRedOval, mRedAngle, mGapRedAngle, false, mPaint);
-
-                mPaint.setColor(Config.GREEN);
-                mPaint.setStrokeWidth(mFiStrokeWidth);
-                canvas.drawArc(mOval, mAngle, mGapGreenAngle, false, mPaint);
-
-                break;
-            case 4:
-                // 绘制绿色圆
-                mPaint.setStrokeWidth(mSeStrokeWidth);
-                mPaint.setColor(Config.GREEN);
-                canvas.drawCircle(getCurX(), getCurY(), mSeCurR - mSeStrokeWidth / 2, mPaint);
-
-                // 绘制红色圆弧
-                mPaint.setStrokeWidth(mFiStrokeWidth);
-                mPaint.setColor(Config.RED);
-                canvas.drawCircle(getCurX(), getCurY(), mFiCurR - mFiStrokeWidth / 2, mPaint);
-
-                break;
-            default:
-                break;
         }
 
     }
