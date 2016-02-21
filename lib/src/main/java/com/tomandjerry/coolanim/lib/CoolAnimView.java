@@ -12,7 +12,7 @@ import android.view.View;
  * Created by yanxing on 16/1/19.
  */
 public class CoolAnimView extends View {
-    public final static int WIDTH_DEFAULT = 300;
+    public final static int WIDTH_DEFAULT = 850;
     public final static int HEIGHT_DEFAULT = 300;
 
     private int mWidth;
