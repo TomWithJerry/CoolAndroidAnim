@@ -26,6 +26,7 @@ public class CoolAnimView extends View {
     private ValueAnimator mAnimator;
 
     private boolean isInit = false;
+    private OnCoolAnimViewListener mOnCoolAnimViewListener;
 
     public CoolAnimView(Context context) {
         this(context, null);
@@ -70,7 +71,7 @@ public class CoolAnimView extends View {
         mCenterX = (int) (getX() + mWidth/2);
         mCenterY = (int) (getY() + mHeight/2);
 
-        mPelletMng = new PelletManager(mCenterX, mCenterY);
+        mPelletMng = new PelletManager(this, mCenterX, mCenterY);
 
         mAnimator = ValueAnimator.ofInt(0, 1).setDuration(16);
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
@@ -83,6 +84,18 @@ public class CoolAnimView extends View {
         mAnimator.start();
     }
 
+    public void stopAnim() {
+        if (mPelletMng != null) {
+            mPelletMng.endAnim();
+        }
+    }
+
+    public void onAnimEnd() {
+        if (mOnCoolAnimViewListener != null) {
+            mOnCoolAnimViewListener.onAnimEnd();
+        }
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -91,6 +104,14 @@ public class CoolAnimView extends View {
             isInit = true;
         }
         mPelletMng.drawTheWorld(canvas);
+    }
+
+    public void setOnCoolAnimViewListener(OnCoolAnimViewListener onCoolAnimViewListener) {
+        mOnCoolAnimViewListener = onCoolAnimViewListener;
+    }
+
+    public interface OnCoolAnimViewListener {
+        void onAnimEnd();
     }
 
 }

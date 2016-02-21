@@ -1,6 +1,7 @@
 package com.tomandjerry.coolanim.lib;
 
 import android.graphics.Canvas;
+import android.widget.Toast;
 
 import com.tomandjerry.coolanim.lib.letter.ALetter;
 import com.tomandjerry.coolanim.lib.letter.DLetter;
@@ -29,8 +30,10 @@ public class PelletManager implements Pellet.AnimatorStateListen {
     private List<Letter> mLetters;
     private int mEndNum = 0;
     private boolean isEnding = false;
+    private CoolAnimView mView;
 
-    public PelletManager(int centerX, int centerY) {
+    public PelletManager(CoolAnimView view, int centerX, int centerY) {
+        mView = view;
         mPellets = new ArrayList<>();
         mLetters = new ArrayList<>();
         initComponents(centerX, centerY);
@@ -106,16 +109,16 @@ public class PelletManager implements Pellet.AnimatorStateListen {
         }
     }
 
-    // 循环次数
-    private int times = 1;
+    public void endAnim() {
+        isEnding = true;
+    }
 
     // 纪录动画结束的小球个数,当动画结束可以执行循环任务
     @Override
     public void onAnimatorEnd() {
         mEndNum++;
         if (mEndNum == mPellets.size()) {
-            times--;
-            if (times == 0) {
+            if (isEnding) {
                 showText();
             } else {
                 startPelletsAnim();
@@ -132,5 +135,13 @@ public class PelletManager implements Pellet.AnimatorStateListen {
                 l.startAnim();
             }
         }
+    }
+
+    /**
+     * 由第一个小球传达结束动画消息到manager中
+     */
+    @Override
+    public void onAllAnimatorEnd() {
+        mView.onAnimEnd();
     }
 }
