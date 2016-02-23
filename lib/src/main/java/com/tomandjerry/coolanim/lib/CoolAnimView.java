@@ -68,8 +68,8 @@ public class CoolAnimView extends View {
         mWidth = getMeasuredWidth();
         mHeight = getMeasuredHeight();
 
-        mCenterX = (int) (getX() + mWidth/2);
-        mCenterY = (int) (getY() + mHeight/2);
+        mCenterX = (int) (getTranslationX() + mWidth/2);
+        mCenterY = (int) (getTranslationY() + mHeight/2);
 
         mPelletMng = new PelletManager(this, mCenterX, mCenterY);
 
